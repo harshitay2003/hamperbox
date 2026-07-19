@@ -1,0 +1,178 @@
+# ==========================================
+# Python
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Ruff
+.ruff_cache/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Spyder
+.spyproject/
+
+# Rope
+.ropeproject/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# ==========================================
+# Virtual Environments
+# ==========================================
+venv/
+.venv/
+env/
+.env/
+ENV/
+virtualenv/
+
+# ==========================================
+# Environment Variables
+# ==========================================
+.env
+.env.*
+*.env
+
+# Keep example env file
+!.env.example
+
+# ==========================================
+# Logs
+# ==========================================
+*.log
+logs/
+log/
+
+# ==========================================
+# Database
+# ==========================================
+*.sqlite3
+*.sqlite
+db.sqlite3
+
+# ==========================================
+# Flask
+# ==========================================
+instance/
+.webassets-cache/
+
+# ==========================================
+# FastAPI
+# ==========================================
+*.pid
+
+# ==========================================
+# Cache
+# ==========================================
+.cache/
+__pypackages__/
+
+# ==========================================
+# OS Files
+# ==========================================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ==========================================
+# Temporary Files
+# ==========================================
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*~
+
+# ==========================================
+# Secrets
+# ==========================================
+secrets.json
+credentials.json
+service-account.json
+firebase-adminsdk*.json
+
+# ==========================================
+# Python Version Managers
+# ==========================================
+.python-version
+
+# ==========================================
+# Build Artifacts
+# ==========================================
+*.whl
+*.tar.gz
+
+# ==========================================
+# C Extensions
+# ==========================================
+*.pyd
+*.pyo
+
+# ==========================================
+# Local Configuration
+# ==========================================
+local_settings.py
+settings_local.py
+
+# ==========================================
+# Mac/Linux
+# ==========================================
+.AppleDouble
+.LSOverride
+
+# ==========================================
+# Windows
+# ==========================================
+ehthumbs.db
