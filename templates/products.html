@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products — Plush Petals | Curated Luxury Gifting</title>
+  <meta name="description"
+    content="Explore the curated collections of Plush Petals. Filter and sort through our premium gift hampers, ring platters, haldi jewellery, and bespoke wedding packaging." />
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo/logo.png') }}" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ============ DESIGN TOKENS ============ */
+    :root {
+      --ivory: #FFF9F4;
+      --blush: #F7D6E0;
+      --gold: #D4AF37;
+      --gold-soft: #E8C874;
+      --sage: #A8C3A0;
+      --lavender: #D9C5F2;
+      --wine: #7A2048;
+      --wine-deep: #5A1636;
+      --ink: #2A1421;
+      --muted: #6b5560;
+      --glass: rgba(255, 249, 244, 0.55);
+      --glass-border: rgba(212, 175, 55, 0.25);
+      --shadow-sm: 0 4px 14px rgba(122, 32, 72, 0.08);
+      --shadow-md: 0 14px 40px rgba(122, 32, 72, 0.12);
+      --shadow-lg: 0 30px 80px rgba(122, 32, 72, 0.18);
+      --shadow-gold: 0 20px 50px rgba(212, 175, 55, 0.28);
+      --grad-warm: linear-gradient(135deg, #FFF9F4 0%, #F7D6E0 55%, #D9C5F2 100%);
+      --grad-gold: linear-gradient(135deg, #D4AF37 0%, #E8C874 50%, #B8891A 100%);
+      --grad-wine: linear-gradient(135deg, #7A2048 0%, #A83F6B 100%);
+      --radius-sm: 14px;
+      --radius-md: 22px;
+      --radius-lg: 32px;
+      --radius-xl: 48px;
+    }
+
+    /* ============ RESET & GLOBAL ============ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--ivory);
+      color: var(--ink);
+      line-height: 1.65;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: none;
+      border: none;
+      background: none;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      color: var(--wine-deep);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 6vw;
+    }
+
+    /* ============ CURSOR GLOW ============ */
+    .cursor-dot,
+    .cursor-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+    }
+
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--wine);
+      mix-blend-mode: difference;
+    }
+
+    .cursor-glow {
+      width: 42px;
+      height: 42px;
+      border: 1.5px solid var(--gold);
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.25), transparent 70%);
+      transition: transform 0.2s ease-out, width 0.3s, height 0.3s, background 0.3s;
+    }
+
+    .cursor-glow.hover {
+      width: 70px;
+      height: 70px;
+      background: radial-gradient(circle, rgba(122, 32, 72, 0.35), transparent 70%);
+    }
+
+    @media (hover: none) {
+      .cursor-dot,
+      .cursor-glow {
+        display: none;
+      }
+
+      body,
+      button,
+      a {
+        cursor: auto !important;
+      }
+    }
+
+    /* ============ FLOATING PETALS BG ============ */
+    .petals {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .petal {
+      position: absolute;
+      top: -10vh;
+      font-size: 20px;
+      opacity: 0.5;
+      animation: fall linear infinite, sway ease-in-out infinite;
+      will-change: transform, margin-left;
+      --sway: 60px;
+      --drift: 120px;
+      --spin: 360deg;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-10vh) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+
+      8% {
+        opacity: 0.65;
+      }
+
+      92% {
+        opacity: 0.45;
+      }
+
+      100% {
+        transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin));
+        opacity: 0;
+      }
+    }
+
+    @keyframes sway {
+      0%,
+      100% {
+        margin-left: 0;
+      }
+
+      25% {
+        margin-left: calc(var(--sway) * -1);
+      }
+
+      50% {
+        margin-left: calc(var(--sway) * 0.4);
+      }
+
+      75% {
+        margin-left: calc(var(--sway) * -0.6);
+      }
+    }
+
+    /* ============ NAV ============ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 14px 6vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.4s ease;
+      background: rgba(255, 249, 244, 0.75);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 4px 30px rgba(122, 32, 72, 0.06);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--wine-deep);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      line-height: 1;
+      transition: color 0.4s ease;
+    }
+
+    .logo-img {
+      height: 38px;
+      width: auto;
+      max-width: 140px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .logo-text {
+      color: inherit;
+      white-space: nowrap;
+    }
+
+    .logo-text em {
+      background: var(--grad-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-style: italic;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 46px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--wine-deep);
+      letter-spacing: 0.03em;
+      position: relative;
+      padding: 6px 0;
+      transition: color 0.4s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--grad-gold);
+      transition: width 0.35s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 12px 26px;
+      background: var(--grad-wine);
+      color: var(--ivory);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 101;
+    }
+
+    .burger span {
+      width: 26px;
+      height: 2px;
+      background: var(--wine);
+      transition: 0.3s;
+    }
+
+    /* ============ MOBILE NAV DRAWER ============ */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 320px;
+      height: 100vh;
+      background: rgba(42, 20, 33, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1000;
+      padding: 80px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      border-left: 1px solid rgba(212, 175, 55, 0.2);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .mobile-menu.active {
+      right: 0;
+    }
+
+    .mobile-menu-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      font-size: 2.2rem;
+      color: var(--gold-soft);
+      cursor: pointer;
+      line-height: 1;
+      transition: transform 0.3s;
+    }
+
+    .mobile-menu-close:hover {
+      transform: rotate(90deg);
+    }
+
+    .mobile-menu-links {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-top: 40px;
+    }
+
+    .mobile-menu-links a {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--ivory);
+      transition: color 0.3s;
+    }
+
+    .mobile-menu-links a:hover {
+      color: var(--gold-soft);
+    }
+
+    .mobile-menu-links .mobile-menu-cta {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem;
+      margin-top: 20px;
+      padding: 14px 28px;
+      background: var(--grad-gold);
+      color: var(--ink);
+      border-radius: 999px;
+      text-align: center;
+      font-weight: 600;
+      box-shadow: var(--shadow-gold);
+    }
+
+    /* ============ HEADER TITLE BLOCK ============ */
+    .catalog-header {
+      padding-top: 150px;
+      padding-bottom: 40px;
+      text-align: center;
+    }
+
+    .catalog-header .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--wine);
+      padding: 8px 18px;
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      margin-bottom: 20px;
+    }
+
+    .catalog-header .eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 12px var(--gold);
+    }
+
+    .catalog-header h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      margin-bottom: 15px;
+    }
+
+    .catalog-header h1 em {
+      font-style: italic;
+      background: var(--grad-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .catalog-header p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ============ SEARCH & FILTERS BAR ============ */
+    .filter-section {
+      margin-bottom: 50px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      z-index: 20;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .filter-main-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .search-group {
+      flex: 1;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 20px 14px 45px;
+      border-radius: 999px;
+      border: 1px solid rgba(122, 32, 72, 0.15);
+      background: rgba(255, 255, 255, 0.7);
+      font-family: inherit;
+      color: var(--ink);
+      font-size: 14px;
+      transition: all 0.3s;
+      cursor: auto;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--wine);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(122, 32, 72, 0.08);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+      font-size: 16px;
+    }
+
+    .filter-toggle-btn {
+      padding: 14px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(122, 32, 72, 0.15);
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--wine-deep);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .filter-toggle-btn:hover {
+      border-color: var(--gold);
+      background: white;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-toggle-btn.active {
+      background: var(--grad-wine);
+      color: var(--ivory);
+      border-color: transparent;
+    }
+
+    .sort-wrapper {
+      min-width: 200px;
+    }
+
+    .select-input {
+      width: 100%;
+      padding: 14px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(122, 32, 72, 0.15);
+      background: rgba(255, 255, 255, 0.7) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5 L6 6.5 L11 1.5' stroke='%237A2048' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>") no-repeat right 20px center/12px auto;
+      font-family: inherit;
+      color: var(--ink);
+      font-size: 14px;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .select-input:focus {
+      outline: none;
+      border-color: var(--wine);
+      background-color: white;
+    }
+
+    .filter-expandable-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .filter-expandable-panel.open {
+      max-height: 350px;
+    }
+
+    .filter-expandable-content {
+      padding-top: 24px;
+      border-top: 1px solid rgba(122, 32, 72, 0.08);
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .expandable-filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .expandable-filter-group label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--wine-deep);
+    }
+
+    .price-filter-group {
+      max-width: 400px;
+    }
+
+    .range-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .range-slider-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .range-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(122, 32, 72, 0.12);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--wine);
+      border: 2.5px solid var(--ivory);
+      box-shadow: 0 2px 6px rgba(122, 32, 72, 0.25);
+      transition: transform 0.1s;
+    }
+
+    .range-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .price-display {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wine-deep);
+      min-width: 85px;
+      text-align: right;
+    }
+
+    .category-pills {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 5px;
+    }
+
+    .pill-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(122, 32, 72, 0.12);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--wine-deep);
+      background: rgba(255, 249, 244, 0.4);
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .pill-btn:hover {
+      background: var(--ivory);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    .pill-btn.active {
+      background: var(--grad-wine);
+      color: var(--ivory);
+      border-color: transparent;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ============ PRODUCT GRID ============ */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      margin-bottom: 120px;
+      position: relative;
+      z-index: 20;
+    }
+
+    .prod-card {
+      background: white;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+    }
+
+    .prod-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--gold);
+    }
+
+    .prod-img-wrapper {
+      position: relative;
+      aspect-ratio: 1/1;
+      overflow: hidden;
+    }
+
+    .prod-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s cubic-bezier(0.15, 0.85, 0.3, 1);
+    }
+
+    .prod-card:hover .prod-img-wrapper img {
+      transform: scale(1.1);
+    }
+
+    .prod-tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 6px 12px;
+      background: rgba(255, 249, 244, 0.9);
+      backdrop-filter: blur(8px);
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--wine-deep);
+      border: 1px solid var(--glass-border);
+      z-index: 10;
+    }
+
+    .prod-info {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .prod-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .prod-category {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .prod-rating {
+      color: var(--gold);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .prod-info h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: var(--ink);
+      line-height: 1.25;
+      font-weight: 600;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .prod-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .prod-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid rgba(122, 32, 72, 0.06);
+    }
+
+    .prod-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--wine-deep);
+    }
+
+    .inquire-btn {
+      padding: 10px 18px;
+      background: var(--grad-wine);
+      color: var(--ivory);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .inquire-btn:hover {
+      background: var(--grad-gold);
+      color: var(--ink);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .inquire-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    /* ============ NO PRODUCTS VIEW ============ */
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 20px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(10px);
+    }
+
+    .no-results h3 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      color: var(--wine-deep);
+    }
+
+    .no-results p {
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .reset-btn {
+      padding: 12px 28px;
+      background: var(--grad-wine);
+      color: var(--ivory);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .reset-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ============ FOOTER ============ */
+    footer {
+      background: var(--ink);
+      color: var(--ivory);
+      padding: 100px 0 50px;
+      position: relative;
+      z-index: 20;
+    }
+
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 50px;
+      margin-bottom: 80px;
+    }
+
+    .foot-col h5 {
+      font-size: 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold-soft);
+      margin-bottom: 26px;
+      position: relative;
+    }
+
+    .foot-col ul {
+      list-style: none;
+    }
+
+    .foot-col li {
+      margin-bottom: 14px;
+    }
+
+    .foot-col a {
+      color: rgba(255, 249, 244, 0.7);
+      transition: color 0.3s;
+      font-size: 14px;
+    }
+
+    .foot-col a:hover {
+      color: var(--gold-soft);
+    }
+
+    .foot-col.brand p {
+      margin-top: 20px;
+      color: rgba(255, 249, 244, 0.6);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .foot-bottom {
+      border-top: 1px solid rgba(255, 249, 244, 0.1);
+      padding-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: rgba(255, 249, 244, 0.5);
+    }
+
+    .socials {
+      display: flex;
+      gap: 20px;
+    }
+
+    .socials a {
+      font-size: 16px;
+      color: rgba(255, 249, 244, 0.6);
+      transition: color 0.3s;
+    }
+
+    .socials a:hover {
+      color: var(--gold-soft);
+    }
+
+    /* ============ RESPONSIVE LAYOUTS ============ */
+    @media (max-width: 1024px) {
+      .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+
+      .nav-links,
+      .nav-cta {
+        display: none;
+      }
+
+      .burger {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .prod-info {
+        padding: 12px;
+      }
+
+      .prod-info h3 {
+        font-size: 0.95rem;
+      }
+
+      .prod-price {
+        font-size: 1rem;
+      }
+
+      .inquire-btn {
+        padding: 6px 12px;
+        font-size: 10px;
+      }
+
+      .filter-section {
+        padding: 16px;
+      }
+
+      .filter-main-row {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .search-group {
+        width: 100%;
+        flex: none;
+      }
+
+      .filter-toggle-btn {
+        flex: 1;
+        justify-content: center;
+      }
+
+      .sort-wrapper {
+        flex: 1;
+        min-width: 150px;
+      }
+
+      .foot-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .catalog-header {
+        padding-top: 120px;
+      }
+
+      .logo {
+        font-size: 1.35rem;
+      }
+
+      .logo-img {
+        height: 32px;
+      }
+
+      .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+
+      .prod-tag {
+        font-size: 8px;
+        padding: 3px 6px;
+        top: 8px;
+        left: 8px;
+      }
+
+      .prod-info {
+        padding: 8px;
+      }
+
+      .prod-info h3 {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+      }
+
+      .prod-desc {
+        display: none;
+      }
+
+      .prod-meta {
+        margin-bottom: 4px;
+      }
+
+      .prod-category {
+        font-size: 8px;
+      }
+
+      .prod-rating {
+        font-size: 8px;
+      }
+
+      .prod-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        padding-top: 8px;
+      }
+
+      .prod-price {
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      .inquire-btn {
+        padding: 6px 8px;
+        font-size: 9px;
+        justify-content: center;
+      }
+
+      .foot-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .foot-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- CURSOR GLOW -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-glow"></div>
+
+  <!-- FLOATING PETALS -->
+  <div class="petals" id="petals"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="/" class="logo">
+      <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="" class="logo-img" onerror="this.remove()">
+      <span class="logo-text">Plush <em>Petals</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="/products">Collections</a>
+      <a href="/#how">Process</a>
+      <a href="/#insta">Journal</a>
+    </div>
+    <a href="/#cta" class="nav-cta">Custom Order →</a>
+    <div class="burger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <!-- MOBILE NAV DRAWER -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-close" id="mobileMenuClose">&times;</div>
+    <div class="mobile-menu-links">
+      <a href="/products">Collections</a>
+      <a href="/#how">Process</a>
+      <a href="/#insta">Journal</a>
+      <a href="/#cta" class="mobile-menu-cta">Custom Order →</a>
+    </div>
+  </div>
+
+  <!-- CATALOG HEADER -->
+  <header class="catalog-header">
+    <div class="container">
+      <span class="eyebrow">Plush Petals Catalogue</span>
+      <h1>Explore Our <em>Bespoke Creations</em></h1>
+      <p>A handpicked selection of artisanal wedding trays, customized gift hampers, festive boxes, and traditional gota patti jewellery designed to enchant.</p>
+    </div>
+  </header>
+
+  <!-- FILTER & SEARCH PANEL -->
+  <section class="container" style="position: relative; z-index: 30;">
+    <div class="filter-section">
+      <!-- Main Row (Search + Toggle Filter + Sort Dropdown) -->
+      <div class="filter-main-row">
+        <!-- Search bar -->
+        <div class="search-group">
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search creations..." />
+          </div>
+        </div>
+
+        <!-- Filter Toggle Button -->
+        <button type="button" class="filter-toggle-btn" id="filterToggleBtn">
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" fill="currentColor"/>
+          </svg>
+          Filters
+        </button>
+
+        <!-- Sort Select -->
+        <div class="sort-wrapper">
+          <select id="sortInput" class="select-input">
+            <option value="popularity">Popularity</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Expandable Filters Drawer -->
+      <div class="filter-expandable-panel" id="filterExpandablePanel">
+        <div class="filter-expandable-content">
+          <!-- Price Range Slider -->
+          <div class="expandable-filter-group price-filter-group">
+            <label for="priceInput">Max Price Limit</label>
+            <div class="range-container">
+              <div class="range-slider-wrapper">
+                <input type="range" id="priceInput" class="range-slider" min="500" max="15000" step="500" value="15000" />
+                <span class="price-display" id="priceVal">₹15,000</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Pills -->
+          <div class="expandable-filter-group">
+            <label>Filter by Collection</label>
+            <div class="category-pills" id="categoryPills">
+              <button class="pill-btn active" data-category="all">All Collections</button>
+              <button class="pill-btn" data-category="hampers">Gift Hampers</button>
+              <button class="pill-btn" data-category="platters">Ring Platters</button>
+              <button class="pill-btn" data-category="haldi">Haldi Jewellery</button>
+              <button class="pill-btn" data-category="packing">Wedding Packing</button>
+              <button class="pill-btn" data-category="bridal">Bridal Trunks</button>
+              <button class="pill-btn" data-category="custom">Custom Gifts</button>
+              <button class="pill-btn" data-category="festive">Festive Trays</button>
+              <button class="pill-btn" data-category="baby">Baby Shower</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT GRID -->
+  <main class="container">
+    <div class="products-grid" id="productsGrid">
+      <!-- Cards rendered dynamically via JS -->
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-col brand">
+          <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="" class="logo-img"
+              onerror="this.remove()">
+            <span class="logo-text">Plush <em>Petals</em></span>
+          </a>
+          <p>Handcrafted luxury gifting & wedding packaging, thoughtfully designed and delivered pan-India from our studio in bloom.</p>
+        </div>
+        <div class="foot-col">
+          <h5>Explore</h5>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="/products">Collections</a></li>
+            <li><a href="/#gallery">Gallery</a></li>
+            <li><a href="/#cta">Custom Orders</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h5>Support</h5>
+          <ul>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Shipping</a></li>
+            <li><a href="#">Care Guide</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h5>Say Hello</h5>
+          <ul>
+            <li><a href="mailto:plushpetals@gmail.com">plushpetals@gmail.com</a></li>
+            <li><a href="tel:+918770886631">+91 8770886631</a></li>
+            <li><a href="#">Indore · Mumbai · Delhi · Bengaluru</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <div>© 2026 Plush Petals. Crafted with ✿ in India.</div>
+        <div class="socials">
+          <a href="#" title="Instagram">◉</a>
+          <a href="#" title="WhatsApp">✆</a>
+          <a href="#" title="Pinterest">P</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ============ CURSOR GLOW ============ */
+    (function () {
+      const dot = document.querySelector('.cursor-dot');
+      const glow = document.querySelector('.cursor-glow');
+      if (matchMedia('(hover: none)').matches) return;
+      let mx = 0, my = 0, gx = 0, gy = 0;
+      window.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+      });
+      function loop() {
+        gx += (mx - gx) * 0.18;
+        gy += (my - gy) * 0.18;
+        glow.style.transform = `translate(${gx}px, ${gy}px) translate(-50%,-50%)`;
+        requestAnimationFrame(loop);
+      }
+      loop();
+      document.querySelectorAll('a, button, input, select, .pill-btn, .inquire-btn').forEach(el => {
+        el.addEventListener('mouseenter', () => glow.classList.add('hover'));
+        el.addEventListener('mouseleave', () => glow.classList.remove('hover'));
+      });
+    })();
+
+    /* ============ FLOATING PETALS ============ */
+    (function () {
+      const container = document.getElementById('petals');
+      if (!container) return;
+      const count = 22;
+      const colors = ['#F7D6E0', '#D4AF37', '#D9C5F2', '#A8C3A0', '#7A2048'];
+      const petalsList = ['✿', '❀', '❃', '🌸', 'petal'];
+
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'petal';
+
+        const isText = Math.random() > 0.4;
+        if (isText) {
+          p.innerText = petalsList[Math.floor(Math.random() * (petalsList.length - 1))];
+        } else {
+          p.innerHTML = `<svg width="15" height="15" viewBox="0 0 30 30" fill="none"><path d="M15 0 C18 10, 28 12, 30 15 C28 18, 18 20, 15 30 C12 20, 2 18, 0 15 C2 12, 12 10, 15 0 Z" fill="${colors[Math.floor(Math.random() * colors.length)]}"/></svg>`;
+        }
+
+        p.style.color = colors[Math.floor(Math.random() * colors.length)];
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.fontSize = 12 + Math.random() * 14 + 'px';
+
+        const duration = 9 + Math.random() * 12;
+        const delay = -Math.random() * 15;
+        p.style.animationDuration = `${duration}s, ${3 + Math.random() * 4}s`;
+        p.style.animationDelay = `${delay}s, ${-Math.random() * 4}s`;
+
+        p.style.setProperty('--sway', `${40 + Math.random() * 60}px`);
+        p.style.setProperty('--drift', `${80 + Math.random() * 120}px`);
+        p.style.setProperty('--spin', `${180 + Math.random() * 360}deg`);
+
+        p.style.opacity = 0.25 + Math.random() * 0.35;
+        container.appendChild(p);
+      }
+    })();
+
+    /* ============ MOBILE MENU ============ */
+    (function () {
+      const burger = document.querySelector('.burger');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const closeBtn = document.getElementById('mobileMenuClose');
+      const menuLinks = document.querySelectorAll('.mobile-menu-links a');
+
+      if (burger && mobileMenu && closeBtn) {
+        burger.addEventListener('click', () => {
+          mobileMenu.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+          mobileMenu.classList.remove('active');
+        });
+
+        menuLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+          });
+        });
+      }
+    })();
+
+    /* ============ PRODUCTS DYNAMIC DATA ============ */
+    let PRODUCTS = [];
+    let CATEGORY_MAP = {};
+
+    async function loadCategories() {
+      try {
+        const response = await fetch('/api/categories');
+        const categories = await response.json();
+        
+        // Populate category map
+        categories.forEach(cat => {
+          CATEGORY_MAP[cat.slug] = cat.name;
+        });
+
+        // Populate category pills in the expandable panel
+        const pillsContainer = document.getElementById('categoryPills');
+        let html = '<button class="pill-btn active" data-category="all">All Collections</button>';
+        categories.forEach(cat => {
+          html += `<button class="pill-btn" data-category="${cat.slug}">${cat.name}</button>`;
+        });
+        pillsContainer.innerHTML = html;
+
+        // Set initial category pill
+        initCategoryFilter();
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      }
+    }
+
+    async function loadProducts() {
+      try {
+        const response = await fetch('/api/products');
+        PRODUCTS = await response.json();
+        renderProducts();
+      } catch (err) {
+        console.error("Failed to load products:", err);
+      }
+    }
+
+    async function logInquiry(prodName) {
+      try {
+        await fetch('/api/inquire', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'Client (WhatsApp Redirect)',
+            phone: 'WhatsApp Click',
+            message: `User clicked WhatsApp inquiry for creation: "${prodName}"`,
+            product_name: prodName
+          })
+        });
+      } catch (err) {
+        console.error("Failed to log inquiry:", err);
+      }
+    }
+
+    /* ============ RENDER & FILTER ENGINE ============ */
+    const searchInput = document.getElementById('searchInput');
+    const sortInput = document.getElementById('sortInput');
+    const priceInput = document.getElementById('priceInput');
+    const priceVal = document.getElementById('priceVal');
+    const categoryPills = document.getElementById('categoryPills');
+    const productsGrid = document.getElementById('productsGrid');
+
+    let activeCategory = 'all';
+
+    // Parse URL Parameter
+    function getCategoryFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('category') || 'all';
+    }
+
+    // Set initial category pill
+    function initCategoryFilter() {
+      const urlCat = getCategoryFromUrl();
+      activeCategory = urlCat;
+
+      document.querySelectorAll('#categoryPills .pill-btn').forEach(btn => {
+        if (btn.getAttribute('data-category') === urlCat) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // Dynamic Filter & Sort Logic
+    function renderProducts() {
+      const query = searchInput.value.toLowerCase().trim();
+      const sortBy = sortInput.value;
+      const maxPrice = parseInt(priceInput.value);
+
+      // 1. Filtering
+      let filtered = PRODUCTS.filter(prod => {
+        // Category Filter
+        if (activeCategory !== 'all' && prod.category_slug !== activeCategory) {
+          return false;
+        }
+        // Price Filter
+        if (prod.price > maxPrice) {
+          return false;
+        }
+        // Search Filter
+        if (query) {
+          const matchName = prod.name.toLowerCase().includes(query);
+          const matchDesc = prod.description.toLowerCase().includes(query);
+          const matchTag = (prod.tag || '').toLowerCase().includes(query);
+          if (!matchName && !matchDesc && !matchTag) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      // 2. Sorting
+      if (sortBy === 'price-asc') {
+        filtered.sort((a, b) => a.price - b.price);
+      } else if (sortBy === 'price-desc') {
+        filtered.sort((a, b) => b.price - a.price);
+      } else {
+        // 'popularity' - default order
+        filtered.sort((a, b) => a.id - b.id);
+      }
+
+      // 3. Render HTML
+      if (filtered.length === 0) {
+        productsGrid.innerHTML = `
+          <div class="no-results">
+            <h3>No Creations Found</h3>
+            <p>We couldn't find any creations matching your current search or filter options.</p>
+            <button class="reset-btn" id="resetFiltersBtn">Reset Filters</button>
+          </div>
+        `;
+        document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+        return;
+      }
+
+      productsGrid.innerHTML = filtered.map(prod => {
+        // Construct WhatsApp Link
+        const message = encodeURIComponent(`Hi Plush Petals! I'm interested in inquiring about your product "${prod.name}" (Price: ₹${prod.price.toLocaleString('en-IN')}) listed in the catalogue. Please share more details.`);
+        const waLink = `https://wa.me/918770886631?text=${message}`;
+
+        return `
+          <div class="prod-card">
+            ${prod.tag ? `<span class="prod-tag">${prod.tag}</span>` : ''}
+            <div class="prod-img-wrapper">
+              <img src="/static/images/${prod.image}" alt="${prod.name}" onerror="this.src='/static/images/cat-hampers.jpg';" />
+            </div>
+            <div class="prod-info">
+              <div class="prod-meta">
+                <span class="prod-category">${CATEGORY_MAP[prod.category_slug] || prod.category_slug}</span>
+                <span class="prod-rating">${prod.rating}</span>
+              </div>
+              <h3>${prod.name}</h3>
+              <p class="prod-desc">${prod.description}</p>
+              <div class="prod-footer">
+                <span class="prod-price">₹${prod.price.toLocaleString('en-IN')}</span>
+                <a href="${waLink}" target="_blank" class="inquire-btn" onclick="logInquiry('${prod.name.replace(/'/g, "\\'")}')">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.45L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.488 1.977 14.02 1.953 12.006 1.953c-5.437 0-9.865 4.371-9.87 9.8-.002 1.73.457 3.419 1.332 4.926l-.982 3.58 3.682-.966zM17.472 14.382c-.3-.149-1.778-.877-2.046-.975-.267-.098-.463-.149-.658.149-.195.298-.755.975-.927 1.171-.171.196-.343.221-.643.072-1.077-.539-1.824-1.002-2.61-2.351-.208-.356.208-.33.595-1.104.064-.129.033-.243-.016-.342-.049-.098-.463-1.116-.634-1.527-.168-.403-.35-.349-.482-.355-.126-.006-.271-.007-.417-.007-.146 0-.383.055-.584.274-.201.218-.767.75-1.042 1.258-.276.508-.432 1.01-.61 1.311.198.33.627 1.01 1.737 2.05 1.066 1.001 1.962 1.5 2.684 1.728.539.171.93.189 1.291.135.403-.061 1.233-.504 1.407-.991.174-.488.174-.906.122-.991-.052-.085-.195-.135-.495-.284z"/>
+                  </svg>
+                  Inquire
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Reset all filter inputs
+    function resetFilters() {
+      searchInput.value = '';
+      sortInput.value = 'popularity';
+      priceInput.value = 15000;
+      priceVal.innerText = '₹15,000';
+      activeCategory = 'all';
+
+      // reset category pills
+      document.querySelectorAll('#categoryPills .pill-btn').forEach(btn => {
+        if (btn.getAttribute('data-category') === 'all') {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      renderProducts();
+    }
+
+    // Event Listeners
+    searchInput.addEventListener('input', renderProducts);
+    sortInput.addEventListener('change', renderProducts);
+    priceInput.addEventListener('input', (e) => {
+      priceVal.innerText = `₹${parseInt(e.target.value).toLocaleString('en-IN')}`;
+      renderProducts();
+    });
+
+    categoryPills.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('pill-btn')) return;
+
+      // Update active state
+      document.querySelectorAll('#categoryPills .pill-btn').forEach(btn => btn.classList.remove('active'));
+      e.target.classList.add('active');
+
+      activeCategory = e.target.getAttribute('data-category');
+      renderProducts();
+    });
+
+    // Filter Panel Toggle
+    const filterToggleBtn = document.getElementById('filterToggleBtn');
+    const filterExpandablePanel = document.getElementById('filterExpandablePanel');
+
+    filterToggleBtn.addEventListener('click', () => {
+      const isOpen = filterExpandablePanel.classList.toggle('open');
+      filterToggleBtn.classList.toggle('active', isOpen);
+    });
+
+    // Initialize
+    async function initCatalog() {
+      await loadCategories();
+      await loadProducts();
+    }
+    initCatalog();
+  </script>
+</body>
+
+</html>

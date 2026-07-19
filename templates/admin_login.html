@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | Plush Petals</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --wine: #7A2048;
+      --wine-deep: #4A102A;
+      --gold: #C39B62;
+      --gold-soft: #E6C594;
+      --ivory: #FFFDFB;
+      --glass: rgba(255, 253, 251, 0.85);
+      --glass-border: rgba(122, 32, 72, 0.15);
+      --shadow-sm: 0 4px 20px rgba(74, 16, 42, 0.05);
+      --shadow-md: 0 10px 40px rgba(74, 16, 42, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #4A102A 0%, #1A0510 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Floating Petals Ambient Decor */
+    body::before, body::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(195, 155, 98, 0.15) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+    }
+    body::before { top: -100px; left: -100px; }
+    body::after { bottom: -100px; right: -100px; }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .login-card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 45px 40px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .logo-area {
+      margin-bottom: 35px;
+    }
+
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--wine-deep);
+      font-weight: 400;
+    }
+
+    .logo-text em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #705864;
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 500;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--wine-deep);
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(122, 32, 72, 0.15);
+      background: rgba(255, 255, 255, 0.8);
+      font-family: inherit;
+      color: #1A0813;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--wine);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(122, 32, 72, 0.08);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--wine) 0%, var(--wine-deep) 100%);
+      color: var(--ivory);
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(122, 32, 72, 0.2);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(122, 32, 72, 0.3);
+      filter: brightness(1.1);
+    }
+
+    .error-msg {
+      background: rgba(186, 45, 50, 0.08);
+      border: 1px solid rgba(186, 45, 50, 0.2);
+      color: #BA2D32;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .back-home {
+      display: inline-block;
+      margin-top: 30px;
+      font-size: 13px;
+      color: var(--wine);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .back-home:hover {
+      color: var(--gold);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="logo-area">
+        <div class="logo-text">Plush <em>Petals</em></div>
+        <div class="subtitle">Management Panel</div>
+      </div>
+
+      {% if error %}
+      <div class="error-msg">
+        <span>⚠️</span> {{ error }}
+      </div>
+      {% endif %}
+
+      <form method="POST" action="/admin/login">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-wrapper">
+            <input type="text" id="username" name="username" class="input-field" placeholder="Enter username" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="password" name="password" class="input-field" placeholder="Enter password" required autocomplete="current-password">
+          </div>
+        </div>
+
+        <button type="submit" class="login-btn">Secure Login</button>
+      </form>
+
+      <a href="/" class="back-home">← Back to website</a>
+    </div>
+  </div>
+
+</body>
+</html>

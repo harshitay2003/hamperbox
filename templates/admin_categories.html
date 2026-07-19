@@ -1,0 +1,200 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Manage Collections{% endblock %}
+{% block page_title %}Collections{% endblock %}
+
+{% block styles %}
+<style>
+  .categories-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+  }
+
+  .table-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+  }
+
+  .categories-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .categories-table th, .categories-table td {
+    padding: 16px 20px;
+    font-size: 14.5px;
+    border-bottom: 1px solid #FAF5F0;
+  }
+
+  .categories-table th {
+    font-weight: 600;
+    color: var(--wine-deep);
+    background: #FAF5F0;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  .categories-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .categories-table tbody tr:hover {
+    background: rgba(250, 245, 240, 0.4);
+  }
+
+  .slug-badge {
+    background: rgba(122, 32, 72, 0.05);
+    color: var(--wine);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 13px;
+  }
+
+  .action-btn.delete {
+    background: rgba(186, 45, 50, 0.06);
+    color: #BA2D32;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+
+  .action-btn.delete:hover {
+    background: rgba(186, 45, 50, 0.15);
+  }
+
+  /* Form Sidebar Card */
+  .form-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--glass-border);
+    height: fit-content;
+  }
+
+  .form-card h3 {
+    font-size: 1.2rem;
+    color: var(--wine-deep);
+    margin-bottom: 20px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .input-group label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wine-deep);
+  }
+
+  .input-control {
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(122, 32, 72, 0.12);
+    font-family: inherit;
+    font-size: 14px;
+    background: #FFFDFB;
+  }
+
+  .input-control:focus {
+    outline: none;
+    border-color: var(--wine);
+    box-shadow: 0 0 0 3px rgba(122, 32, 72, 0.06);
+  }
+
+  @media (max-width: 900px) {
+    .categories-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div class="categories-layout">
+    <!-- TABLE AREA -->
+    <div class="table-card">
+      <div style="overflow-x: auto;">
+        <table class="categories-table">
+          <thead>
+            <tr>
+              <th>Collection Name</th>
+              <th>Category Slug</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cat in categories %}
+            <tr>
+              <td>
+                <span style="font-weight: 600; color: var(--wine-deep);">{{ cat.name }}</span>
+              </td>
+              <td>
+                <span class="slug-badge">{{ cat.slug }}</span>
+              </td>
+              <td>
+                <a href="/admin/categories/delete/{{ cat.slug }}" class="action-btn delete" onclick="return confirm('WARNING: Deleting this collection will permanently delete all associated products under it. Proceed?');">
+                  Delete
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FORM AREA -->
+    <div class="form-card">
+      <h3>Create Collection</h3>
+      <form action="/admin/categories/add" method="POST">
+        <div class="input-group">
+          <label for="cat_name">Collection Title</label>
+          <input type="text" id="cat_name" name="name" class="input-control" required placeholder="e.g. Ring Platters" oninput="generateSlug(this.value)">
+        </div>
+
+        <div class="input-group">
+          <label for="cat_slug">Category Slug</label>
+          <input type="text" id="cat_slug" name="slug" class="input-control" required placeholder="e.g. ring-platters">
+          <span style="font-size: 11px; color: var(--muted); margin-top: 4px;">Used in URL filtering paths.</span>
+        </div>
+
+        <button type="submit" class="btn-luxury" style="width: 100%; justify-content: center; margin-top: 10px;">
+          Create Collection
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function generateSlug(text) {
+    const slug = text
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    document.getElementById('cat_slug').value = slug;
+  }
+</script>
+{% endblock %}
