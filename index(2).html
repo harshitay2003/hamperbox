@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Luxe Bloom — Luxury Gifting & Wedding Packaging</title>
+<meta name="description" content="Handcrafted luxury hampers, wedding ring platters, haldi jewellery, mehendi accessories & bespoke wedding packaging designed to make every celebration unforgettable." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============ DESIGN TOKENS ============ */
+:root {
+  --ivory: #FFF9F4;
+  --blush: #F7D6E0;
+  --gold: #D4AF37;
+  --gold-soft: #E8C874;
+  --sage: #A8C3A0;
+  --lavender: #D9C5F2;
+  --wine: #7A2048;
+  --wine-deep: #5A1636;
+  --ink: #2A1421;
+  --muted: #6b5560;
+  --glass: rgba(255, 249, 244, 0.55);
+  --glass-border: rgba(212, 175, 55, 0.25);
+  --shadow-sm: 0 4px 14px rgba(122, 32, 72, 0.08);
+  --shadow-md: 0 14px 40px rgba(122, 32, 72, 0.12);
+  --shadow-lg: 0 30px 80px rgba(122, 32, 72, 0.18);
+  --shadow-gold: 0 20px 50px rgba(212, 175, 55, 0.28);
+  --grad-warm: linear-gradient(135deg, #FFF9F4 0%, #F7D6E0 55%, #D9C5F2 100%);
+  --grad-gold: linear-gradient(135deg, #D4AF37 0%, #E8C874 50%, #B8891A 100%);
+  --grad-wine: linear-gradient(135deg, #7A2048 0%, #A83F6B 100%);
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 32px;
+  --radius-xl: 48px;
+}
+
+/* ============ RESET ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--ivory);
+  color: var(--ink);
+  line-height: 1.65;
+  overflow-x: hidden;
+  cursor: none;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: none; border: none; background: none; }
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: var(--wine-deep);
+}
+
+section { position: relative; padding: 120px 6vw; }
+.container { max-width: 1400px; margin: 0 auto; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--wine);
+  padding: 8px 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  margin-bottom: 22px;
+}
+.eyebrow::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold);
+}
+.section-title {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  margin-bottom: 18px;
+}
+.section-title em {
+  font-style: italic;
+  background: var(--grad-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.section-sub {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 620px;
+  margin-bottom: 60px;
+}
+.center { text-align: center; }
+.center .section-sub { margin-left: auto; margin-right: auto; }
+
+/* ============ CURSOR GLOW ============ */
+.cursor-dot, .cursor-glow {
+  position: fixed; top: 0; left: 0;
+  border-radius: 50%; pointer-events: none;
+  z-index: 9999; transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+}
+.cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--wine);
+  mix-blend-mode: difference;
+}
+.cursor-glow {
+  width: 42px; height: 42px;
+  border: 1.5px solid var(--gold);
+  background: radial-gradient(circle, rgba(212,175,55,0.25), transparent 70%);
+  transition: transform 0.2s ease-out, width 0.3s, height 0.3s, background 0.3s;
+}
+.cursor-glow.hover {
+  width: 70px; height: 70px;
+  background: radial-gradient(circle, rgba(122,32,72,0.35), transparent 70%);
+}
+@media (hover: none) { .cursor-dot, .cursor-glow { display: none; } body, button, a { cursor: auto !important; } }
+
+/* ============ FLOATING PETALS BG (wind-swayed) ============ */
+.petals { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.petal {
+  position: absolute; top: -10vh; font-size: 20px;
+  opacity: 0.5;
+  animation: fall linear infinite, sway ease-in-out infinite;
+  will-change: transform, margin-left;
+  /* per-petal randomized wind variables, set inline via JS */
+  --sway: 60px;
+  --drift: 120px;
+  --spin: 360deg;
+}
+/* vertical fall + gentle overall drift + tumble */
+@keyframes fall {
+  0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 0.65; }
+  92%  { opacity: 0.45; }
+  100% { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
+}
+/* horizontal gust sway, layered independently so it reads like wind gusts pushing the petal */
+@keyframes sway {
+  0%, 100% { margin-left: 0; }
+  25%      { margin-left: calc(var(--sway) * -1); }
+  50%      { margin-left: calc(var(--sway) * 0.4); }
+  75%      { margin-left: calc(var(--sway) * -0.6); }
+}
+
+/* ============ NAV ============ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 6vw;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.4s ease;
+}
+.nav.scrolled {
+  background: rgba(255, 249, 244, 0.75);
+  backdrop-filter: blur(20px);
+  padding: 14px 6vw;
+  box-shadow: 0 4px 30px rgba(122,32,72,0.06);
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem; font-weight: 700;
+  color: var(--wine-deep);
+  display: flex; align-items: center; gap: 8px;
+}
+.logo span {
+  background: var(--grad-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: italic;
+}
+.logo::before {
+  content: '❦'; color: var(--gold); font-size: 1.4rem;
+}
+.nav-links { display: flex; gap: 38px; align-items: center; }
+.nav-links a {
+  font-size: 14px; font-weight: 500; color: var(--ink);
+  position: relative; padding: 6px 0;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 2px; background: var(--grad-gold);
+  transition: width 0.35s ease;
+}
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  padding: 12px 26px;
+  background: var(--grad-wine);
+  color: var(--ivory);
+  border-radius: 999px;
+  font-size: 13px; font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+.nav-cta:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.burger { display: none; flex-direction: column; gap: 5px; }
+.burger span { width: 26px; height: 2px; background: var(--wine); transition: 0.3s; }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  align-items: center;
+  gap: 60px;
+  padding: 140px 6vw 100px;
+  position: relative;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(247,214,224,0.6), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(217,197,242,0.5), transparent 45%),
+    radial-gradient(circle at 60% 30%, rgba(212,175,55,0.15), transparent 50%),
+    var(--ivory);
+  overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(168,195,160,0.25), transparent 70%);
+  border-radius: 50%; filter: blur(40px);
+  animation: floaty 12s ease-in-out infinite;
+}
+@keyframes floaty {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(-30px,20px) scale(1.05); }
+}
+
+.hero-content { position: relative; z-index: 3; }
+.hero h1 {
+  font-size: clamp(2.6rem, 5.8vw, 5.4rem);
+  font-weight: 500;
+  line-height: 1.02;
+  margin: 20px 0 28px;
+}
+.hero h1 em {
+  font-style: italic; font-weight: 400;
+  background: var(--grad-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+}
+.hero h1 em::after {
+  content: ''; position: absolute;
+  left: 0; right: 0; bottom: 6px; height: 8px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 8'><path d='M2 5 Q50 1 100 4 T198 3' stroke='%23D4AF37' stroke-width='2' fill='none' stroke-linecap='round'/></svg>") no-repeat center/contain;
+  opacity: 0.7;
+}
+.hero-sub {
+  font-size: 1.1rem; color: var(--muted);
+  max-width: 540px; margin-bottom: 40px;
+}
+.hero-btns { display: flex; gap: 18px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 34px;
+  border-radius: 999px;
+  font-size: 14px; font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: all 0.4s cubic-bezier(.4,0,.2,1);
+  position: relative; overflow: hidden;
+}
+.btn-primary {
+  background: var(--grad-wine); color: var(--ivory);
+  box-shadow: var(--shadow-md);
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(122,32,72,0.35);
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--grad-gold);
+  opacity: 0; transition: opacity 0.4s;
+  z-index: -1;
+}
+.btn-primary:hover::before { opacity: 1; }
+.btn-ghost {
+  background: var(--glass);
+  color: var(--wine-deep);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+}
+.btn-ghost:hover {
+  background: var(--ivory);
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-gold);
+}
+.btn .arrow { transition: transform 0.35s; }
+.btn:hover .arrow { transform: translateX(5px); }
+
+.hero-stats {
+  display: flex; gap: 40px; margin-top: 60px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(122,32,72,0.12);
+}
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem; font-weight: 600;
+  color: var(--wine-deep);
+}
+.stat-num em { color: var(--gold); font-style: normal; }
+.stat-lbl {
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--muted);
+  margin-top: 4px;
+}
+
+/* HERO COLLAGE */
+.hero-visual {
+  position: relative;
+  height: 620px;
+  perspective: 1200px;
+}
+.collage-item {
+  position: absolute;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+}
+.collage-item img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 1.5s ease;
+}
+.collage-item:hover img { transform: scale(1.08); }
+
+.c1 { top: 0; left: 8%; width: 42%; height: 55%; transform: rotate(-4deg); animation: bob1 8s ease-in-out infinite; }
+.c2 { top: 8%; right: 0; width: 44%; height: 44%; transform: rotate(3deg); animation: bob2 9s ease-in-out infinite; }
+.c3 { bottom: 4%; left: 0; width: 38%; height: 38%; transform: rotate(2deg); animation: bob1 10s ease-in-out infinite 1s; }
+.c4 { bottom: 0; right: 8%; width: 46%; height: 46%; transform: rotate(-3deg); animation: bob2 11s ease-in-out infinite 0.5s; }
+
+@keyframes bob1 { 0%,100%{transform:rotate(-4deg) translateY(0)} 50%{transform:rotate(-4deg) translateY(-15px)} }
+@keyframes bob2 { 0%,100%{transform:rotate(3deg) translateY(0)} 50%{transform:rotate(3deg) translateY(-18px)} }
+
+.badge-float {
+  position: absolute; z-index: 5;
+  padding: 14px 20px;
+  background: var(--ivory);
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 500;
+  animation: floaty 6s ease-in-out infinite;
+}
+.badge-float .ic {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--grad-gold);
+  display: grid; place-items: center;
+  color: white; font-weight: 700;
+}
+.badge-1 { top: 45%; left: -20px; }
+.badge-2 { top: 20%; right: -10px; animation-delay: 2s; }
+
+/* ============ WHY US ============ */
+.why-us { background: linear-gradient(180deg, var(--ivory), #fff2ea); }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+.feature-card {
+  padding: 40px 32px;
+  background: var(--ivory);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(212,175,55,0.15);
+  transition: all 0.5s cubic-bezier(.4,0,.2,1);
+  position: relative; overflow: hidden;
+}
+.feature-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--grad-warm);
+  opacity: 0; transition: opacity 0.5s;
+}
+.feature-card > * { position: relative; z-index: 1; }
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--gold);
+}
+.feature-card:hover::before { opacity: 0.4; }
+.feature-icon {
+  width: 62px; height: 62px;
+  border-radius: 18px;
+  background: var(--grad-gold);
+  display: grid; place-items: center;
+  color: white; font-size: 26px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow-gold);
+  transition: transform 0.5s;
+}
+.feature-card:hover .feature-icon { transform: rotate(-8deg) scale(1.08); }
+.feature-card h3 {
+  font-size: 1.35rem; margin-bottom: 10px;
+}
+.feature-card p {
+  font-size: 0.95rem; color: var(--muted);
+}
+
+/* ============ COLLECTION ============ */
+.collection { background: var(--ivory); }
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+.cat-card {
+  position: relative;
+  aspect-ratio: 3/4;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: none;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.5s, box-shadow 0.5s;
+}
+.cat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+.cat-card img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 1.2s cubic-bezier(.4,0,.2,1);
+}
+.cat-card:hover img { transform: scale(1.12); }
+.cat-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(90,22,54,0.85) 100%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 26px;
+  color: var(--ivory);
+}
+.cat-overlay h3 {
+  color: var(--ivory);
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+  transform: translateY(10px);
+  transition: transform 0.4s;
+}
+.cat-overlay .cat-cta {
+  font-size: 12px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold-soft);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.cat-card:hover .cat-overlay h3 { transform: translateY(0); }
+.cat-card:hover .cat-overlay .cat-cta { opacity: 1; transform: translateY(0); }
+.cat-tag {
+  position: absolute; top: 16px; left: 16px;
+  padding: 6px 12px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border-radius: 999px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--wine-deep);
+  border: 1px solid var(--glass-border);
+}
+
+/* ============ MASONRY ============ */
+.gallery { background: linear-gradient(180deg, #fff2ea, var(--ivory)); }
+.masonry {
+  columns: 3;
+  column-gap: 22px;
+}
+.mas-item {
+  break-inside: avoid;
+  margin-bottom: 22px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.5s;
+}
+.mas-item:hover { transform: translateY(-6px); }
+.mas-item img { width: 100%; transition: transform 1s; display: block; }
+.mas-item:hover img { transform: scale(1.06); }
+.mas-hover {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(122,32,72,0.7));
+  display: flex; align-items: flex-end; justify-content: center;
+  padding: 24px;
+  opacity: 0; transition: opacity 0.4s;
+}
+.mas-item:hover .mas-hover { opacity: 1; }
+.mas-hover .view {
+  color: var(--ivory);
+  padding: 12px 24px;
+  border: 1px solid var(--gold-soft);
+  border-radius: 999px;
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.1);
+}
+
+/* ============ HOW IT WORKS ============ */
+.how { background: var(--ivory); overflow: hidden; }
+.timeline {
+  position: relative;
+  margin-top: 60px;
+  padding: 40px 0;
+}
+.timeline-line {
+  position: absolute; top: 50%; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--wine), var(--gold), transparent);
+  transform: translateY(-50%);
+}
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  position: relative;
+}
+.step {
+  text-align: center;
+  padding: 30px 16px;
+  background: var(--ivory);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(212,175,55,0.2);
+  position: relative;
+  transition: all 0.5s;
+}
+.step:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--gold);
+}
+.step-num {
+  width: 58px; height: 58px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: var(--grad-wine);
+  color: var(--ivory);
+  display: grid; place-items: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-weight: 600;
+  box-shadow: 0 10px 25px rgba(122,32,72,0.35);
+  position: relative;
+}
+.step-num::after {
+  content: ''; position: absolute; inset: -5px;
+  border: 1px dashed var(--gold);
+  border-radius: 50%;
+  animation: rotate 20s linear infinite;
+}
+@keyframes rotate { to { transform: rotate(360deg); } }
+.step h4 {
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+}
+.step p { font-size: 0.88rem; color: var(--muted); }
+
+/* ============ TESTIMONIALS ============ */
+.testimonials {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(217,197,242,0.4), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(247,214,224,0.5), transparent 50%),
+    var(--ivory);
+}
+.testi-track {
+  display: flex; gap: 26px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 20px 4px 40px;
+  scrollbar-width: none;
+}
+.testi-track::-webkit-scrollbar { display: none; }
+.testi-card {
+  flex: 0 0 380px;
+  scroll-snap-align: start;
+  padding: 36px;
+  background: var(--glass);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  transition: transform 0.4s;
+}
+.testi-card:hover { transform: translateY(-6px); }
+.testi-card::before {
+  content: '“';
+  position: absolute; top: 10px; right: 24px;
+  font-family: 'Playfair Display', serif;
+  font-size: 6rem; line-height: 1;
+  color: var(--gold);
+  opacity: 0.35;
+}
+.stars {
+  color: var(--gold); font-size: 15px;
+  letter-spacing: 3px;
+  margin-bottom: 18px;
+}
+.testi-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ink);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+.testi-author { display: flex; align-items: center; gap: 14px; }
+.testi-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  overflow: hidden; border: 2px solid var(--gold);
+  padding: 2px; background: var(--ivory);
+}
+.testi-avatar img { border-radius: 50%; width: 100%; height: 100%; object-fit: cover; }
+.testi-name { font-weight: 600; font-size: 0.95rem; }
+.testi-role { font-size: 0.8rem; color: var(--muted); }
+
+.testi-nav { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
+.testi-nav button {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid var(--gold);
+  color: var(--wine-deep);
+  transition: all 0.3s;
+  display: grid; place-items: center;
+  font-size: 18px;
+}
+.testi-nav button:hover {
+  background: var(--grad-wine); color: var(--ivory);
+  transform: scale(1.05);
+}
+
+/* ============ CTA ============ */
+.cta-section {
+  padding: 80px 6vw;
+}
+.cta-box {
+  position: relative;
+  padding: 100px 60px;
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at 20% 30%, rgba(212,175,55,0.35), transparent 55%),
+    radial-gradient(circle at 80% 70%, rgba(217,197,242,0.5), transparent 55%),
+    var(--grad-wine);
+  color: var(--ivory);
+  text-align: center;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.cta-box::before, .cta-box::after {
+  content: ''; position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,249,244,0.15), transparent 70%);
+  pointer-events: none;
+}
+.cta-box::before { top: -200px; left: -100px; width: 500px; height: 500px; }
+.cta-box::after { bottom: -200px; right: -100px; width: 500px; height: 500px; }
+.cta-flower {
+  position: absolute; font-size: 50px; opacity: 0.25;
+  animation: floaty 8s ease-in-out infinite;
+}
+.cta-flower.f1 { top: 30px; left: 60px; }
+.cta-flower.f2 { bottom: 40px; right: 80px; animation-delay: 2s; }
+.cta-flower.f3 { top: 50px; right: 120px; font-size: 34px; animation-delay: 1s; }
+.cta-box h2 {
+  position: relative;
+  color: var(--ivory);
+  font-size: clamp(2rem, 4.5vw, 3.8rem);
+  font-weight: 400;
+  margin-bottom: 22px;
+}
+.cta-box h2 em {
+  font-style: italic;
+  background: var(--grad-gold);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cta-box p {
+  position: relative;
+  font-size: 1.1rem;
+  max-width: 560px; margin: 0 auto 40px;
+  opacity: 0.9;
+}
+.cta-box .btn { position: relative; }
+.cta-box .btn-primary {
+  background: var(--grad-gold);
+  color: var(--wine-deep);
+  font-weight: 600;
+}
+
+/* ============ INSTAGRAM ============ */
+.insta { background: var(--ivory); }
+.insta-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 50px; flex-wrap: wrap; gap: 20px; }
+.insta-head .left { max-width: 600px; }
+.insta-follow {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: var(--grad-warm);
+  border: 1px solid var(--gold);
+  font-weight: 500; color: var(--wine-deep);
+  transition: all 0.4s;
+}
+.insta-follow:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.insta-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+.insta-item {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+  cursor: none;
+}
+.insta-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s; }
+.insta-item:hover img { transform: scale(1.15); }
+.insta-item::after {
+  content: '♡'; position: absolute; inset: 0;
+  display: grid; place-items: center;
+  color: var(--ivory); font-size: 32px;
+  background: rgba(122,32,72,0.5);
+  opacity: 0; transition: opacity 0.4s;
+  backdrop-filter: blur(2px);
+}
+.insta-item:hover::after { opacity: 1; }
+
+/* ============ FOOTER ============ */
+footer {
+  background: linear-gradient(180deg, var(--ivory), #fff2ea);
+  padding: 80px 6vw 40px;
+  border-top: 1px solid rgba(212,175,55,0.2);
+}
+.foot-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 50px;
+  margin-bottom: 60px;
+}
+.foot-brand p {
+  color: var(--muted);
+  margin-top: 18px;
+  max-width: 340px;
+  font-size: 0.95rem;
+}
+.foot-col h5 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  color: var(--wine-deep);
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
+}
+.foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.foot-col a {
+  color: var(--muted); font-size: 0.92rem;
+  transition: color 0.3s, padding-left 0.3s;
+}
+.foot-col a:hover { color: var(--wine); padding-left: 8px; }
+.foot-bottom {
+  padding-top: 30px;
+  border-top: 1px solid rgba(122,32,72,0.12);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+  color: var(--muted); font-size: 0.85rem;
+}
+.socials { display: flex; gap: 12px; }
+.socials a {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--gold);
+  display: grid; place-items: center;
+  color: var(--wine-deep);
+  transition: all 0.3s;
+}
+.socials a:hover {
+  background: var(--grad-wine); color: var(--ivory);
+  transform: translateY(-3px);
+}
+
+/* ============ REVEAL ANIM ============ */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 1s ease, transform 1s cubic-bezier(.2,.7,.2,1); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+.reveal.d1 { transition-delay: 0.1s; }
+.reveal.d2 { transition-delay: 0.2s; }
+.reveal.d3 { transition-delay: 0.3s; }
+.reveal.d4 { transition-delay: 0.4s; }
+.reveal.d5 { transition-delay: 0.5s; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; padding-top: 120px; }
+  .hero-visual { height: 500px; margin-top: 20px; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .collection-grid { grid-template-columns: repeat(2, 1fr); }
+  .masonry { columns: 2; }
+  .steps { grid-template-columns: repeat(2, 1fr); }
+  .timeline-line { display: none; }
+  .insta-grid { grid-template-columns: repeat(4, 1fr); }
+  .foot-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-links { display: none; }
+  .burger { display: flex; }
+}
+@media (max-width: 640px) {
+  section { padding: 80px 5vw; }
+  .hero { padding: 120px 5vw 60px; }
+  .hero h1 { font-size: 2.6rem; }
+  .hero-stats { gap: 24px; flex-wrap: wrap; }
+  .features-grid, .collection-grid { grid-template-columns: 1fr; }
+  .masonry { columns: 1; }
+  .steps { grid-template-columns: 1fr; }
+  .testi-card { flex: 0 0 85%; padding: 28px; }
+  .cta-box { padding: 60px 24px; }
+  .insta-grid { grid-template-columns: repeat(2, 1fr); }
+  .foot-grid { grid-template-columns: 1fr; gap: 30px; }
+  .foot-bottom { flex-direction: column; text-align: center; }
+  body { cursor: auto; }
+  button, a { cursor: pointer; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor-glow"></div>
+<div class="cursor-dot"></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#" class="logo">Luxe <span>Bloom</span></a>
+  <div class="nav-links">
+    <a href="#collection">Collections</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#how">Process</a>
+    <a href="#testimonials">Stories</a>
+    <a href="#insta">Journal</a>
+  </div>
+  <a href="#cta" class="nav-cta">Custom Order →</a>
+  <div class="burger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <span class="eyebrow reveal">Handcrafted in India · Est. 2018</span>
+    <h1 class="reveal d1">Every Celebration<br/>Deserves Something<br/><em>Beautiful.</em></h1>
+    <p class="hero-sub reveal d2">Luxury handcrafted hampers, ring platters, haldi jewellery, wedding packaging and personalized gifting designed to make your moments unforgettable.</p>
+    <div class="hero-btns reveal d3">
+      <a href="#collection" class="btn btn-primary">Explore Collection <span class="arrow">→</span></a>
+      <a href="#cta" class="btn btn-ghost">Customize Your Order</a>
+    </div>
+    <div class="hero-stats reveal d4">
+      <div><div class="stat-num">2K<em>+</em></div><div class="stat-lbl">Weddings Styled</div></div>
+      <div><div class="stat-num">150<em>+</em></div><div class="stat-lbl">Cities Delivered</div></div>
+      <div><div class="stat-num">100<em>%</em></div><div class="stat-lbl">Handmade Love</div></div>
+    </div>
+  </div>
+
+  <div class="hero-visual reveal d2">
+    <div class="collage-item c1">
+      <img src="{{ url_for('static', filename='images/hero-collage.jpg') }}" alt="Luxury gift hamper">
+  </div>
+  
+  <div class="collage-item c2">
+      <img src="{{ url_for('static', filename='images/cat-ring-platter.jpg') }}" alt="Wedding ring platter">
+  </div>
+  
+  <div class="collage-item c3">
+      <img src="{{ url_for('static', filename='images/gal-1.jpg') }}" alt="Floral packaging">
+  </div>
+  
+  <div class="collage-item c4">
+      <img src="{{ url_for('static', filename='images/gal-3.jpg') }}" alt="Elegant favors">
+  </div>
+    <div class="badge-float badge-1"><div class="ic">✦</div>Handmade<br/>with love</div>
+    <div class="badge-float badge-2"><div class="ic">★</div>5.0 · 800+<br/>reviews</div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-us" id="why">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow reveal">Why Luxe Bloom</span>
+      <h2 class="section-title reveal d1">Crafted with intention,<br/><em>gifted with love.</em></h2>
+      <p class="section-sub reveal d2">Every hamper, every ribbon, every petal — assembled by artisans who understand that gifting is an act of devotion.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal d1"><div class="feature-icon">✿</div><h3>Handmade with Love</h3><p>Every piece is assembled by skilled artisans, never mass-produced.</p></div>
+      <div class="feature-card reveal d2"><div class="feature-icon">✎</div><h3>Fully Customizable</h3><p>Choose colors, themes, monograms, ribbons — make it uniquely yours.</p></div>
+      <div class="feature-card reveal d3"><div class="feature-icon">◆</div><h3>Premium Materials</h3><p>Velvet, silk, brass, hand-marbled paper — only the finest sourced globally.</p></div>
+      <div class="feature-card reveal d1"><div class="feature-icon">❦</div><h3>Elegant Packaging</h3><p>Signature boxes wrapped in linen and sealed with wax and ribbon.</p></div>
+      <div class="feature-card reveal d2"><div class="feature-icon">✈</div><h3>Pan India Delivery</h3><p>Delivered pristine to 150+ cities with white-glove care.</p></div>
+      <div class="feature-card reveal d3"><div class="feature-icon">♡</div><h3>Every Celebration</h3><p>From baby showers to bridal trousseau — we style every occasion.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COLLECTION -->
+<section class="collection" id="collection">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow reveal">Our Collection</span>
+      <h2 class="section-title reveal d1">A world of <em>curated luxury.</em></h2>
+      <p class="section-sub reveal d2">Explore signature collections crafted for every chapter of celebration.</p>
+    </div>
+<div class="collection-grid">
+  <a class="cat-card reveal d1">
+    <img src="{{ url_for('static', filename='images/cat-hampers.jpg') }}" alt="Luxury Gift Hampers"/>
+    <span class="cat-tag">Signature</span>
+    <div class="cat-overlay">
+      <h3>Luxury Gift Hampers</h3>
+      <span class="cat-cta">Explore →</span>
+    </div>
+  </a>
+
+  <a class="cat-card reveal d2">
+    <img src="{{ url_for('static', filename='images/cat-ring-platter.jpg') }}" alt="Ring Platters"/>
+    <span class="cat-tag">Wedding</span>
+    <div class="cat-overlay">
+      <h3>Ring Platters</h3>
+      <span class="cat-cta">Explore →</span>
+    </div>
+  </a>
+
+  <a class="cat-card reveal d3">
+    <img src="{{ url_for('static', filename='images/cat-haldi.jpg') }}" alt="Haldi Jewellery"/>
+    <span class="cat-tag">Traditions</span>
+    <div class="cat-overlay">
+      <h3>Haldi Jewellery</h3>
+      <span class="cat-cta">Explore →</span>
+    </div>
+  </a>
+
+  <a class="cat-card reveal d4">
+    <img src="{{ url_for('static', filename='images/cat-packing.jpg') }}" alt="Wedding Packing"/>
+    <span class="cat-tag">Bespoke</span>
+    <div class="cat-overlay">
+      <h3>Wedding Packing</h3>
+      <span class="cat-cta">Explore →</span>
+    </div>
+  </a>
+
+  <a class="cat-card reveal d1">
+    <img src="{{ url_for('static', filename='images/cat-bridal.jpg') }}" alt="Bridal Hampers"/>
+    <span class="cat-tag">Bridal</span>
+    <div class="cat-overlay">
+      <h3>Bridal Hampers</h3>
+      <span class="cat-cta">Explore →</span>
+    </div>
+  </a>
+
+  <a class="cat-card reveal d2">
+    <img src="{{ url_for('static', filename='images/cat-custom.jpg') }}" alt="Customized Gifts"/>
+    <span class="cat-tag">Personal</span>
+    <div class="cat-overlay">
+      <h3>Customized Gifts</h3>
+      <span class="cat-cta">Explore →</span>
+    </div>
+  </a>
+
+  <a class="cat-card reveal d3">
+    <img src="{{ url_for('static', filename='images/cat-festive.jpg') }}" alt="Festive Hampers"/>
+    <span class="cat-tag">Festive</span>
+    <div class="cat-overlay">
+      <h3>Festive Hampers</h3>
+      <span class="cat-cta">Explore →</span>
+    </div>
+  </a>
+
+  <a class="cat-card reveal d4">
+    <img src="{{ url_for('static', filename='images/cat-baby-shower.jpg') }}" alt="Baby Shower Hampers"/>
+    <span class="cat-tag">Little Ones</span>
+    <div class="cat-overlay">
+      <h3>Baby Shower Hampers</h3>
+      <span class="cat-cta">Explore →</span>
+    </div>
+  </a>
+</div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow reveal">Featured Designs</span>
+      <h2 class="section-title reveal d1">A gallery of <em>little masterpieces.</em></h2>
+      <p class="section-sub reveal d2">Recent commissions we've had the honour of creating.</p>
+    </div>
+    <div class="masonry">
+      <div class="mas-item reveal">
+        <img src="{{ url_for('static', filename='images/gal-2.jpg') }}" alt="Gallery Image 2"/>
+        <div class="mas-hover"><span class="view">View Details</span></div>
+      </div>
+    
+      <div class="mas-item reveal d1">
+        <img src="{{ url_for('static', filename='images/cat-hampers.jpg') }}" alt="Luxury Gift Hampers"/>
+        <div class="mas-hover"><span class="view">View Details</span></div>
+      </div>
+    
+      <div class="mas-item reveal d2">
+        <img src="{{ url_for('static', filename='images/cat-festive.jpg') }}" alt="Festive Hampers"/>
+        <div class="mas-hover"><span class="view">View Details</span></div>
+      </div>
+    
+      <div class="mas-item reveal">
+        <img src="{{ url_for('static', filename='images/cat-packing.jpg') }}" alt="Wedding Packing"/>
+        <div class="mas-hover"><span class="view">View Details</span></div>
+      </div>
+    
+      <div class="mas-item reveal d1">
+        <img src="{{ url_for('static', filename='images/cat-haldi.jpg') }}" alt="Haldi Jewellery"/>
+        <div class="mas-hover"><span class="view">View Details</span></div>
+      </div>
+    
+      <div class="mas-item reveal d2">
+        <img src="{{ url_for('static', filename='images/gal-4.jpg') }}" alt="Gallery Image 4"/>
+        <div class="mas-hover"><span class="view">View Details</span></div>
+      </div>
+    
+      <div class="mas-item reveal">
+        <img src="{{ url_for('static', filename='images/cat-bridal.jpg') }}" alt="Bridal Hampers"/>
+        <div class="mas-hover"><span class="view">View Details</span></div>
+      </div>
+    
+      <div class="mas-item reveal d1">
+        <img src="{{ url_for('static', filename='images/cat-custom.jpg') }}" alt="Customized Gifts"/>
+        <div class="mas-hover"><span class="view">View Details</span></div>
+      </div>
+    
+      <div class="mas-item reveal d2">
+        <img src="{{ url_for('static', filename='images/cat-ring-platter.jpg') }}" alt="Ring Platters"/>
+        <div class="mas-hover"><span class="view">View Details</span></div>
+      </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow reveal">How It Works</span>
+      <h2 class="section-title reveal d1">Five steps to<br/><em>your perfect gift.</em></h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-line"></div>
+      <div class="steps">
+        <div class="step reveal d1"><div class="step-num">1</div><h4>Tell Us</h4><p>Share your occasion, style & story.</p></div>
+        <div class="step reveal d2"><div class="step-num">2</div><h4>Choose Style</h4><p>Pick your collection or bespoke look.</p></div>
+        <div class="step reveal d3"><div class="step-num">3</div><h4>Customize</h4><p>Colors, themes, monograms — yours.</p></div>
+        <div class="step reveal d4"><div class="step-num">4</div><h4>We Craft</h4><p>Our artisans handcraft each detail.</p></div>
+        <div class="step reveal d5"><div class="step-num">5</div><h4>Delivered</h4><p>Arrives beautifully packed & ready.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow reveal">Love Stories</span>
+      <h2 class="section-title reveal d1">Words from our<br/><em>beautiful clients.</em></h2>
+    </div>
+    <div class="testi-track" id="testiTrack">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Luxe Bloom made our ring ceremony feel like a scene from a fairytale. The platters were absolutely breathtaking — every guest asked where they were from."</p>
+        <div class="testi-author">
+          <div class="testi-avatar"><img src="{{ url_for('static', filename='images/avatar-ananya-vikram.jpg') }}" alt="Ananya & Vikram"/></div>
+          <div><div class="testi-name">Ananya & Vikram</div><div class="testi-role">Mumbai · Nov Wedding</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"The trousseau packing was pure art. Each box felt like unwrapping a piece of my mother's heart. I cried. Truly, truly special."</p>
+        <div class="testi-author">
+          <div class="testi-avatar"><img src="{{ url_for('static', filename='images/avatar-priya-sharma.jpg') }}" alt="Priya Sharma"/></div>
+          <div><div class="testi-name">Priya Sharma</div><div class="testi-role">Delhi Bride</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Their haldi jewellery is unlike anything I've seen. Fresh, modern, yet rooted in tradition. The photos went viral on our wedding hashtag!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar"><img src="{{ url_for('static', filename='images/avatar-riya-kapoor.jpg') }}" alt="Riya Kapoor"/></div>
+          <div><div class="testi-name">Riya Kapoor</div><div class="testi-role">Jaipur Bride</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"We ordered 200 wedding favors and each one was pristine. The attention to detail is unreal. Luxe Bloom is a dream to work with."</p>
+        <div class="testi-author">
+          <div class="testi-avatar"><img src="{{ url_for('static', filename='images/avatar-meera-iyer.jpg') }}" alt="Meera Iyer"/></div>
+          <div><div class="testi-name">Meera Iyer</div><div class="testi-role">Bengaluru</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"My baby shower hamper was so thoughtfully curated — from the linen swaddle to the hand-painted card. Worth every rupee and then some."</p>
+        <div class="testi-author">
+          <div class="testi-avatar"><img src="{{ url_for('static', filename='images/avatar-sanya-malhotra.jpg') }}" alt="Sanya Malhotra"/></div>
+          <div><div class="testi-name">Sanya Malhotra</div><div class="testi-role">New Mom · Pune</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-nav">
+      <button id="testiPrev">←</button>
+      <button id="testiNext">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="container">
+    <div class="cta-box reveal">
+      <span class="cta-flower f1">✿</span>
+      <span class="cta-flower f2">❀</span>
+      <span class="cta-flower f3">✾</span>
+      <h2>Let's create something<br/><em>beautiful together.</em></h2>
+      <p>Have a vision? A colour palette? A story you want told through gifting? We'd love to design it with you.</p>
+      <a href="#" class="btn btn-primary">Request a Custom Design <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="insta" id="insta">
+  <div class="container">
+    <div class="insta-head">
+      <div class="left">
+        <span class="eyebrow reveal">@luxebloom.co</span>
+        <h2 class="section-title reveal d1">Live from our<br/><em>studio in bloom.</em></h2>
+      </div>
+      <a href="#" class="insta-follow reveal d2">◉ Follow Us on Instagram →</a>
+    </div>
+    <div class="insta-grid">
+      <div class="insta-item reveal">
+        <img src="{{ url_for('static', filename='images/gal-1.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d1">
+        <img src="{{ url_for('static', filename='images/cat-bridal.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d2">
+        <img src="{{ url_for('static', filename='images/gal-3.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d3">
+        <img src="{{ url_for('static', filename='images/cat-packing.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d4">
+        <img src="{{ url_for('static', filename='images/cat-haldi.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d5">
+        <img src="{{ url_for('static', filename='images/cat-custom.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal">
+        <img src="{{ url_for('static', filename='images/cat-ring-platter.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d1">
+        <img src="{{ url_for('static', filename='images/cat-festive.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d2">
+        <img src="{{ url_for('static', filename='images/cat-hampers.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d3">
+        <img src="{{ url_for('static', filename='images/gal-2.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d4">
+        <img src="{{ url_for('static', filename='images/gal-4.jpg') }}" alt="">
+      </div>
+    
+      <div class="insta-item reveal d5">
+        <img src="{{ url_for('static', filename='images/gal-5.jpg') }}" alt="">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="logo">Luxe <span>Bloom</span></a>
+        <p>Handcrafted luxury gifting & wedding packaging, thoughtfully designed and delivered pan-India from our studio in bloom.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#collection">Collections</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#cta">Custom Orders</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Support</h5>
+        <ul>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Care Guide</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Say Hello</h5>
+        <ul>
+          <li><a href="#">hello@luxebloom.co</a></li>
+          <li><a href="#">+91 98XXX XXXXX</a></li>
+          <li><a href="#">Mumbai · Delhi · Bengaluru</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 Luxe Bloom. Crafted with ✿ in India.</div>
+      <div class="socials">
+        <a href="#" title="Instagram">◉</a>
+        <a href="#" title="WhatsApp">✆</a>
+        <a href="#" title="Pinterest">P</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating Petals BG (placed last so it paints above every section's background) -->
+<div class="petals" id="petals"></div>
+
+<script>
+/* ============ CURSOR ============ */
+(function(){
+  const dot = document.querySelector('.cursor-dot');
+  const glow = document.querySelector('.cursor-glow');
+  if (matchMedia('(hover: none)').matches) return;
+  let mx=0,my=0,gx=0,gy=0;
+  window.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+  });
+  function loop(){
+    gx += (mx - gx) * 0.18;
+    gy += (my - gy) * 0.18;
+    glow.style.transform = `translate(${gx}px, ${gy}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+  document.querySelectorAll('a, button, .cat-card, .mas-item, .insta-item, .feature-card, .testi-card').forEach(el => {
+    el.addEventListener('mouseenter', () => glow.classList.add('hover'));
+    el.addEventListener('mouseleave', () => glow.classList.remove('hover'));
+  });
+})();
+
+/* ============ PETALS ============ */
+(function(){
+  const wrap = document.getElementById('petals');
+  const glyphs = ['✿','❀','✾','❁','✻','♡'];
+  const colors = ['#F7D6E0','#D4AF37','#D9C5F2','#A8C3A0','#7A2048'];
+  const count = window.innerWidth < 640 ? 12 : 22;
+  for (let i=0; i<count; i++){
+    const p = document.createElement('span');
+    p.className = 'petal';
+    p.textContent = glyphs[i % glyphs.length];
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.color = colors[i % colors.length];
+    p.style.fontSize = (14 + Math.random()*22) + 'px';
+    p.style.opacity = 0.25 + Math.random()*0.35;
+
+    // fall (vertical) timing + overall drift + tumble amount
+    const fallDur = 14 + Math.random()*18;
+    p.style.animationDuration = fallDur + 's, ' + (3 + Math.random()*3) + 's';
+    p.style.animationDelay = (-Math.random()*20) + 's, ' + (-Math.random()*6) + 's';
+    p.style.setProperty('--drift', (60 + Math.random()*140) + 'px');
+    p.style.setProperty('--spin', (Math.random() > 0.5 ? 1 : -1) * (280 + Math.random()*260) + 'deg');
+    // wind gust sway: wider, slower sway for larger/lighter-looking petals
+    p.style.setProperty('--sway', (30 + Math.random()*70) + 'px');
+
+    wrap.appendChild(p);
+  }
+})();
+
+/* ============ NAV SCROLL ============ */
+(function(){
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 30);
+  });
+})();
+
+/* ============ REVEAL ============ */
+(function(){
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  els.forEach(el => io.observe(el));
+})();
+
+/* ============ TESTIMONIAL SCROLL ============ */
+(function(){
+  const track = document.getElementById('testiTrack');
+  const prev = document.getElementById('testiPrev');
+  const next = document.getElementById('testiNext');
+  const step = () => Math.min(420, track.clientWidth * 0.9);
+  prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+})();
+
+/* ============ PARALLAX HERO COLLAGE ============ */
+(function(){
+  const items = document.querySelectorAll('.hero-visual .collage-item');
+  const visual = document.querySelector('.hero-visual');
+  if (!visual) return;
+  visual.addEventListener('mousemove', (e) => {
+    const r = visual.getBoundingClientRect();
+    const x = (e.clientX - r.left)/r.width - 0.5;
+    const y = (e.clientY - r.top)/r.height - 0.5;
+    items.forEach((it, i) => {
+      const d = (i+1) * 6;
+      it.style.transform = `${it.dataset.base || ''} translate(${x*d}px, ${y*d}px)`;
+    });
+  });
+  visual.addEventListener('mouseleave', () => {
+    items.forEach(it => it.style.transform = '');
+  });
+})();
+</script>
+</body>
+</html>
