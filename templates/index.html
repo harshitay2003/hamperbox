@@ -392,6 +392,8 @@
       display: none;
       flex-direction: column;
       gap: 5px;
+      cursor: pointer;
+      z-index: 101;
     }
 
     .burger span {
@@ -399,6 +401,81 @@
       height: 2px;
       background: var(--wine);
       transition: 0.3s;
+    }
+
+    .nav:not(.scrolled) .burger span {
+      background: var(--ivory);
+    }
+
+    /* ============ MOBILE NAV DRAWER ============ */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 320px;
+      height: 100vh;
+      background: rgba(42, 20, 33, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1000;
+      padding: 80px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      border-left: 1px solid rgba(212, 175, 55, 0.2);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .mobile-menu.active {
+      right: 0;
+    }
+
+    .mobile-menu-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      font-size: 2.2rem;
+      color: var(--gold-soft);
+      cursor: pointer;
+      line-height: 1;
+      transition: transform 0.3s;
+    }
+
+    .mobile-menu-close:hover {
+      transform: rotate(90deg);
+    }
+
+    .mobile-menu-links {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-top: 40px;
+    }
+
+    .mobile-menu-links a {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--ivory);
+      transition: color 0.3s;
+    }
+
+    .mobile-menu-links a:hover {
+      color: var(--gold-soft);
+    }
+
+    .mobile-menu-links .mobile-menu-cta {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem;
+      margin-top: 20px;
+      padding: 14px 28px;
+      background: var(--grad-gold);
+      color: var(--ink);
+      border-radius: 999px;
+      text-align: center;
+      font-weight: 600;
+      box-shadow: var(--shadow-gold);
     }
 
     /* ============ HERO ============ */
@@ -1377,7 +1454,10 @@
     /* ============ RESPONSIVE ============ */
     @media (max-width: 1024px) {
       .hero {
-        padding-top: 120px;
+        height: auto;
+        min-height: 100vh;
+        align-items: flex-start;
+        padding-top: 140px;
       }
 
       .features-grid {
@@ -1412,8 +1492,16 @@
         display: none;
       }
 
+      .nav-cta {
+        display: none;
+      }
+
       .burger {
         display: flex;
+      }
+
+      .hero-stats {
+        gap: 36px;
       }
     }
 
@@ -1423,11 +1511,38 @@
       }
 
       .hero {
-        padding: 120px 5vw 60px;
+        height: auto;
+        min-height: 100vh;
+        align-items: flex-start;
+        padding: 130px 5vw 60px;
+      }
+
+      .hero-content {
+        margin-top: 15px;
       }
 
       .hero h1 {
-        font-size: 2.6rem;
+        font-size: 2.2rem;
+        line-height: 1.1;
+      }
+
+      .logo {
+        font-size: 1.35rem;
+      }
+
+      .logo-img {
+        height: 32px;
+      }
+
+      .hero-overlay {
+        background:
+          linear-gradient(180deg, rgba(42, 20, 33, 0.55) 0%, rgba(42, 20, 33, 0.25) 32%, rgba(42, 20, 33, 0.5) 78%, rgba(42, 20, 33, 0.8) 100%),
+          linear-gradient(90deg, rgba(42, 20, 33, 0.45) 0%, rgba(42, 20, 33, 0.1) 40%, rgba(42, 20, 33, 0.1) 60%, rgba(42, 20, 33, 0.45) 100%);
+      }
+
+      .hero-video-bg {
+        opacity: 0.85;
+        filter: saturate(1.1) brightness(0.85);
       }
 
       .hero-stats {
@@ -2109,6 +2224,17 @@
   <!-- Floating Petals BG (placed last so it paints above every section's background) -->
   <div class="petals" id="petals"></div>
 
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-close" id="mobileMenuClose">&times;</div>
+    <div class="mobile-menu-links">
+      <a href="#collection">Collections</a>
+      <a href="#how">Process</a>
+      <a href="#insta">Journal</a>
+      <a href="#cta" class="mobile-menu-cta">Custom Order →</a>
+    </div>
+  </div>
+
   <script>
     /* ============ CURSOR ============ */
     (function () {
@@ -2187,6 +2313,30 @@
         const step = () => Math.min(420, track.clientWidth * 0.9);
         prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
         next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+      }
+    })();
+
+    /* ============ MOBILE MENU ============ */
+    (function () {
+      const burger = document.querySelector('.burger');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const closeBtn = document.getElementById('mobileMenuClose');
+      const menuLinks = document.querySelectorAll('.mobile-menu-links a');
+
+      if (burger && mobileMenu && closeBtn) {
+        burger.addEventListener('click', () => {
+          mobileMenu.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+          mobileMenu.classList.remove('active');
+        });
+
+        menuLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+          });
+        });
       }
     })();
 
