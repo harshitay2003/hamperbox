@@ -214,60 +214,17 @@
       overflow: hidden;
     }
 
-    .petal {
+    .petal-3d {
       position: absolute;
-      top: -10vh;
-      font-size: 20px;
-      opacity: 0.5;
-      animation: fall linear infinite, sway ease-in-out infinite;
-      will-change: transform, margin-left;
-      /* per-petal randomized wind variables, set inline via JS */
-      --sway: 60px;
-      --drift: 120px;
-      --spin: 360deg;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      will-change: transform;
+      transform-style: preserve-3d;
+      z-index: 10;
     }
 
-    /* vertical fall + gentle overall drift + tumble */
-    @keyframes fall {
-      0% {
-        transform: translateY(-10vh) translateX(0) rotate(0deg);
-        opacity: 0;
-      }
 
-      8% {
-        opacity: 0.65;
-      }
-
-      92% {
-        opacity: 0.45;
-      }
-
-      100% {
-        transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin));
-        opacity: 0;
-      }
-    }
-
-    /* horizontal gust sway, layered independently so it reads like wind gusts pushing the petal */
-    @keyframes sway {
-
-      0%,
-      100% {
-        margin-left: 0;
-      }
-
-      25% {
-        margin-left: calc(var(--sway) * -1);
-      }
-
-      50% {
-        margin-left: calc(var(--sway) * 0.4);
-      }
-
-      75% {
-        margin-left: calc(var(--sway) * -0.6);
-      }
-    }
 
     /* ============ NAV ============ */
     .nav {
@@ -466,7 +423,7 @@
     }
 
     .mobile-menu-links .mobile-menu-cta {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Outfit', sans-serif;
       font-size: 0.95rem;
       margin-top: 20px;
       padding: 14px 28px;
@@ -1259,6 +1216,67 @@
       font-weight: 600;
     }
 
+    .cta-form-container input,
+    .cta-form-container textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      color: var(--ivory) !important;
+      font-family: inherit;
+      font-size: 14.5px;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .cta-form-container select {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      color: var(--ivory) !important;
+      font-family: inherit;
+      font-size: 14.5px;
+      outline: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFDFB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 18px center !important;
+      background-size: 16px !important;
+      padding-right: 45px !important;
+    }
+
+    .cta-form-container select option {
+      background-color: var(--wine-deep) !important;
+      color: var(--ivory) !important;
+    }
+
+    .cta-form-container input::placeholder,
+    .cta-form-container textarea::placeholder {
+      color: rgba(255, 255, 255, 0.65) !important;
+      opacity: 1;
+    }
+
+    .cta-form-container input::-webkit-input-placeholder,
+    .cta-form-container textarea::-webkit-input-placeholder {
+      color: rgba(255, 255, 255, 0.65) !important;
+    }
+
+    .cta-form-container input:focus, 
+    .cta-form-container textarea:focus,
+    .cta-form-container select:focus {
+      border-color: var(--gold-soft) !important;
+      background: rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 0 0 4px rgba(230, 197, 148, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    }
+
+
     /* ============ INSTAGRAM ============ */
     .insta {
       background: var(--ivory);
@@ -1338,11 +1356,30 @@
       opacity: 1;
     }
 
-    /* ============ FOOTER ============ */
     footer {
       background: linear-gradient(180deg, var(--ivory), #fff2ea);
       padding: 80px 6vw 40px;
       border-top: 1px solid rgba(212, 175, 55, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer-petal-pile {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 90px;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .settled-petal {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform, opacity;
+      transform-style: preserve-3d;
     }
 
     .foot-grid {
@@ -1665,7 +1702,7 @@
       <span class="logo-text">Plush <em>Petals</em></span>
     </a>
     <div class="nav-links">
-      <a href="#collection">Collections</a>
+      <a href="/products">Collections</a>
       <a href="#how">Process</a>
       <a href="#insta">Journal</a>
     </div>
@@ -1975,7 +2012,7 @@
         <p class="section-sub reveal d2">Explore signature collections crafted for every chapter of celebration.</p>
       </div>
       <div class="collection-grid">
-        <a class="cat-card reveal d1">
+        <a href="/products?category=hampers" class="cat-card reveal d1">
           <img src="{{ url_for('static', filename='images/cat-hampers.jpg') }}" alt="Luxury Gift Hampers" />
           <span class="cat-tag">Signature</span>
           <div class="cat-overlay">
@@ -1984,7 +2021,7 @@
           </div>
         </a>
 
-        <a class="cat-card reveal d2">
+        <a href="/products?category=platters" class="cat-card reveal d2">
           <img src="{{ url_for('static', filename='images/cat-ring-platter.jpg') }}" alt="Ring Platters" />
           <span class="cat-tag">Wedding</span>
           <div class="cat-overlay">
@@ -1993,7 +2030,7 @@
           </div>
         </a>
 
-        <a class="cat-card reveal d3">
+        <a href="/products?category=haldi" class="cat-card reveal d3">
           <img src="{{ url_for('static', filename='images/cat-haldi.jpg') }}" alt="Haldi Jewellery" />
           <span class="cat-tag">Traditions</span>
           <div class="cat-overlay">
@@ -2002,7 +2039,7 @@
           </div>
         </a>
 
-        <a class="cat-card reveal d4">
+        <a href="/products?category=packing" class="cat-card reveal d4">
           <img src="{{ url_for('static', filename='images/cat-packing.jpg') }}" alt="Wedding Packing" />
           <span class="cat-tag">Bespoke</span>
           <div class="cat-overlay">
@@ -2011,7 +2048,7 @@
           </div>
         </a>
 
-        <a class="cat-card reveal d1">
+        <a href="/products?category=bridal" class="cat-card reveal d1">
           <img src="{{ url_for('static', filename='images/cat-bridal.jpg') }}" alt="Bridal Hampers" />
           <span class="cat-tag">Bridal</span>
           <div class="cat-overlay">
@@ -2020,7 +2057,7 @@
           </div>
         </a>
 
-        <a class="cat-card reveal d2">
+        <a href="/products?category=custom" class="cat-card reveal d2">
           <img src="{{ url_for('static', filename='images/cat-custom.jpg') }}" alt="Customized Gifts" />
           <span class="cat-tag">Personal</span>
           <div class="cat-overlay">
@@ -2029,7 +2066,7 @@
           </div>
         </a>
 
-        <a class="cat-card reveal d3">
+        <a href="/products?category=festive" class="cat-card reveal d3">
           <img src="{{ url_for('static', filename='images/cat-festive.jpg') }}" alt="Festive Hampers" />
           <span class="cat-tag">Festive</span>
           <div class="cat-overlay">
@@ -2038,7 +2075,7 @@
           </div>
         </a>
 
-        <a class="cat-card reveal d4">
+        <a href="/products?category=baby" class="cat-card reveal d4">
           <img src="{{ url_for('static', filename='images/cat-baby-shower.jpg') }}" alt="Baby Shower Hampers" />
           <span class="cat-tag">Little Ones</span>
           <div class="cat-overlay">
@@ -2103,7 +2140,48 @@
         <span class="cta-flower f3">✾</span>
         <h2>Let's create something<br /><em>beautiful together.</em></h2>
         <p>Have a vision? A colour palette? A story you want told through gifting? We'd love to design it with you.</p>
-        <a href="#" class="btn btn-primary">Request a Custom Design <span class="arrow">→</span></a>
+
+        <!-- Interactive Luxury Form -->
+        <div class="cta-form-container" style="max-width: 500px; margin: 30px auto 0; text-align: left; position: relative; z-index: 10;">
+          <form id="homeInquiryForm" onsubmit="submitHomeInquiry(event)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+              <input type="text" id="inq_name" name="name" placeholder="Your Name" required>
+              <input type="tel" id="inq_phone" name="phone" placeholder="Phone Number" required>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+              <input type="email" id="inq_email" name="email" placeholder="Email Address (Optional)">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+              <select id="inq_pref" name="celebration" required>
+                <option value="" disabled selected>Select Gifting Category</option>
+                <option value="Gift Hampers">Gift Hampers</option>
+                <option value="Ring Platters">Ring Platters</option>
+                <option value="Haldi Jewellery">Haldi Jewellery</option>
+                <option value="Wedding Packing">Wedding Packing</option>
+                <option value="Bridal Trunks">Bridal Trunks</option>
+                <option value="Customized Gifts">Customized Gifts</option>
+                <option value="Festive Trays">Festive Trays</option>
+                <option value="Baby Shower">Baby Shower / Kids</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+              <textarea id="inq_message" name="message" rows="4" placeholder="Tell us about your theme, quantity, colors, or budget..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; background: var(--grad-gold); color: var(--wine-deep); font-weight: 600; border: none; padding: 16px; border-radius: 12px; font-family: inherit; cursor: pointer; transition: all 0.3s; display: block; text-align: center;">
+              Send Custom Request <span class="arrow">→</span>
+            </button>
+          </form>
+          
+          <div id="inquirySuccessMsg" style="display: none; text-align: center; padding: 30px; background: rgba(255,255,255,0.08); border-radius: 16px; border: 1px solid rgba(255,255,255,0.15);">
+            <div style="font-size: 30px; margin-bottom: 10px;">✨❀✨</div>
+            <h3 style="font-family: 'Playfair Display', serif; color: var(--gold-soft); margin-bottom: 8px;">Inquiry Received</h3>
+            <p style="font-size: 13.5px; opacity: 0.9; margin: 0; line-height: 1.5;">Our design consultant will connect with you via Phone/WhatsApp shortly to bring your customized curation to life.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2170,8 +2248,8 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
+    <div class="footer-petal-pile" id="footerPetalPile"></div>
     <div class="container">
       <div class="foot-grid">
         <div class="foot-brand">
@@ -2187,7 +2265,7 @@
           <h5>Explore</h5>
           <ul>
             <li><a href="#">About</a></li>
-            <li><a href="#collection">Collections</a></li>
+            <li><a href="/products">Collections</a></li>
             <li><a href="#gallery">Gallery</a></li>
             <li><a href="#cta">Custom Orders</a></li>
           </ul>
@@ -2222,13 +2300,39 @@
   </footer>
 
   <!-- Floating Petals BG (placed last so it paints above every section's background) -->
-  <div class="petals" id="petals"></div>
+  <div class="petals" id="petals">
+    <svg style="position: absolute; width: 0; height: 0;" width="0" height="0">
+      <defs>
+        <radialGradient id="petalGrad1" cx="35%" cy="30%" r="60%" fx="35%" fy="30%">
+          <stop offset="0%" stop-color="#FFC0CB" stop-opacity="0.95"/>
+          <stop offset="50%" stop-color="#E25B77" stop-opacity="0.9"/>
+          <stop offset="85%" stop-color="#9E2A2B" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#5C0620" stop-opacity="0.9"/>
+        </radialGradient>
+        <radialGradient id="petalGrad2" cx="35%" cy="30%" r="60%" fx="35%" fy="30%">
+          <stop offset="0%" stop-color="#FFE4E1" stop-opacity="0.98"/>
+          <stop offset="45%" stop-color="#F39FB0" stop-opacity="0.9"/>
+          <stop offset="80%" stop-color="#B83B5E" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#6b0d24" stop-opacity="0.9"/>
+        </radialGradient>
+        <radialGradient id="petalGrad3" cx="35%" cy="30%" r="60%" fx="35%" fy="30%">
+          <stop offset="0%" stop-color="#FFF0F5" stop-opacity="0.95"/>
+          <stop offset="40%" stop-color="#E6C594" stop-opacity="0.85"/>
+          <stop offset="75%" stop-color="#B83B5E" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#7A2048" stop-opacity="0.9"/>
+        </radialGradient>
+        <filter id="petalShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="1" dy="2" stdDeviation="1.5" flood-color="#4A102A" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+    </svg>
+  </div>
 
   <!-- Mobile Menu Overlay -->
   <div class="mobile-menu" id="mobileMenu">
     <div class="mobile-menu-close" id="mobileMenuClose">&times;</div>
     <div class="mobile-menu-links">
-      <a href="#collection">Collections</a>
+      <a href="/products">Collections</a>
       <a href="#how">Process</a>
       <a href="#insta">Journal</a>
       <a href="#cta" class="mobile-menu-cta">Custom Order →</a>
@@ -2259,32 +2363,176 @@
       });
     })();
 
-    /* ============ PETALS ============ */
+    /* ============ REALISTIC 3D PETALS BG ============ */
     (function () {
-      const wrap = document.getElementById('petals');
-      const glyphs = ['✿', '❀', '✾', '❁', '✻', '♡'];
-      const colors = ['#F7D6E0', '#D4AF37', '#D9C5F2', '#A8C3A0', '#7A2048'];
-      const count = window.innerWidth < 640 ? 12 : 22;
-      for (let i = 0; i < count; i++) {
-        const p = document.createElement('span');
-        p.className = 'petal';
-        p.textContent = glyphs[i % glyphs.length];
-        p.style.left = Math.random() * 100 + 'vw';
-        p.style.color = colors[i % colors.length];
-        p.style.fontSize = (14 + Math.random() * 22) + 'px';
-        p.style.opacity = 0.25 + Math.random() * 0.35;
+      const container = document.getElementById('petals');
+      const footerPile = document.getElementById('footerPetalPile');
+      if (!container) return;
 
-        // fall (vertical) timing + overall drift + tumble amount
-        const fallDur = 14 + Math.random() * 18;
-        p.style.animationDuration = fallDur + 's, ' + (3 + Math.random() * 3) + 's';
-        p.style.animationDelay = (-Math.random() * 20) + 's, ' + (-Math.random() * 6) + 's';
-        p.style.setProperty('--drift', (60 + Math.random() * 140) + 'px');
-        p.style.setProperty('--spin', (Math.random() > 0.5 ? 1 : -1) * (280 + Math.random() * 260) + 'deg');
-        // wind gust sway: wider, slower sway for larger/lighter-looking petals
-        p.style.setProperty('--sway', (30 + Math.random() * 70) + 'px');
+      const shapes = [
+        `<svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" filter="url(#petalShadow)" style="width:100%;height:100%;"><path d="M15 4.5 C17.5 2 22.5 1.5 25.5 3.5 C28.5 5.5 29 10.5 27 15.5 C24 22.5 18 26.5 15 28.5 C12 26.5 6 22.5 3 15.5 C1 10.5 1.5 5.5 4.5 3.5 C7.5 1.5 12.5 2 15 4.5 Z" fill="url(#petalGrad1)"/><path d="M15 4.5 C16 12 17 20 15 28.5" stroke="rgba(255,255,255,0.25)" stroke-width="0.7" fill="none"/></svg>`,
+        `<svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" filter="url(#petalShadow)" style="width:100%;height:100%;"><path d="M10 4.5 C14.5 2.5 20.5 3.5 23.5 7 C26.5 10.5 25.5 16.5 21 22 C17 27 12 28.5 9.5 27 C7 25.5 6 20.5 8 15.5 C10 10.5 7 6 10 4.5 Z" fill="url(#petalGrad2)"/><path d="M10 4.5 C13 12 15 19 9.5 27" stroke="rgba(255,255,255,0.22)" stroke-width="0.6" fill="none"/></svg>`,
+        `<svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" filter="url(#petalShadow)" style="width:100%;height:100%;"><path d="M15 1.5 C20.5 5.5 27 10.5 27 17.5 C27 23.5 22 28.5 15 28.5 C8 28.5 3 23.5 3 17.5 C3 10.5 9.5 5.5 15 1.5 Z" fill="url(#petalGrad3)"/><path d="M15 1.5 C15.5 10 15.5 20 15 28.5" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" fill="none"/></svg>`
+      ];
 
-        wrap.appendChild(p);
+      const maxPetals = window.innerWidth < 768 ? 16 : 32;
+      const petalPool = [];
+      const maxSettled = 70;
+      const settledPool = [];
+
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+
+      // Handle resize
+      window.addEventListener('resize', () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+      });
+
+      function spawnSettledPetal(xPos, isInitial = false) {
+        if (!footerPile) return;
+
+        const p = document.createElement('div');
+        p.className = 'settled-petal';
+        p.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+        
+        const size = 10 + Math.random() * 12;
+        p.style.width = `${size}px`;
+        p.style.height = `${size}px`;
+
+        const pileWidth = footerPile.clientWidth || window.innerWidth;
+        // Align close to the falling path but add slight wind dispersion
+        const randomX = isInitial ? (Math.random() * pileWidth) : Math.max(0, Math.min(pileWidth - size, xPos - 15 + Math.random() * 30));
+        const randomBottom = isInitial ? (Math.random() * 45 - 15) : 55; // Drop distance
+
+        p.style.left = `${randomX}px`;
+        p.style.bottom = `${randomBottom}px`;
+
+        // 3D rotation layout (flat or tilted)
+        const rotX = 60 + Math.random() * 25;
+        const rotY = (Math.random() - 0.5) * 30;
+        const rotZ = Math.random() * 360;
+        p.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg)`;
+
+        if (!isInitial) {
+          p.style.opacity = '0';
+          p.style.transition = 'bottom 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease';
+          footerPile.appendChild(p);
+          
+          // Trigger reflow
+          p.getBoundingClientRect();
+          
+          p.style.bottom = `${Math.random() * 35 - 15}px`;
+          p.style.opacity = (0.55 + Math.random() * 0.35).toString();
+        } else {
+          p.style.opacity = (0.45 + Math.random() * 0.4).toString();
+          p.style.bottom = `${Math.random() * 35 - 15}px`;
+          footerPile.appendChild(p);
+        }
+
+        settledPool.push(p);
+
+        // Cap pool size to prevent memory leaks
+        if (settledPool.length > maxSettled) {
+          const old = settledPool.shift();
+          if (old) {
+            old.style.opacity = '0';
+            setTimeout(() => old.remove(), 1000);
+          }
+        }
       }
+
+      // Initial seed: pre-fill the footer with 30 gathered petals
+      for (let i = 0; i < 30; i++) {
+        spawnSettledPetal(0, true);
+      }
+
+      class Petal {
+        constructor() {
+          this.el = document.createElement('div');
+          this.el.className = 'petal-3d';
+          this.el.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+          container.appendChild(this.el);
+          this.reset(true);
+        }
+
+        reset(init = false) {
+          this.x = Math.random() * width;
+          this.y = init ? (Math.random() * (height + 100) - 50) : -50;
+          this.z = Math.random() * 200 - 100;
+          this.landed = false;
+          
+          this.size = 12 + Math.random() * 12; // size in px
+          this.el.style.width = `${this.size}px`;
+          this.el.style.height = `${this.size}px`;
+
+          this.speedY = 1.0 + Math.random() * 1.5;
+          this.speedX = -0.3 + Math.random() * 0.6;
+          
+          // Sway motion parameters
+          this.swaySpeed = 0.005 + Math.random() * 0.01;
+          this.swayAmplitude = 15 + Math.random() * 25;
+          this.swayOffset = Math.random() * 100;
+
+          // 3D rotation velocities
+          this.rotX = Math.random() * 360;
+          this.rotY = Math.random() * 360;
+          this.rotZ = Math.random() * 360;
+
+          this.rotSpeedX = (Math.random() - 0.5) * 1.5;
+          this.rotSpeedY = (Math.random() - 0.5) * 1.8;
+          this.rotSpeedZ = (Math.random() - 0.5) * 1.2;
+
+          this.opacity = 0.45 + Math.random() * 0.45;
+          this.el.style.opacity = this.opacity;
+        }
+
+        update() {
+          this.y += this.speedY;
+          this.x += this.speedX + Math.sin(this.y * this.swaySpeed + this.swayOffset) * 0.3;
+          
+          this.rotX += this.rotSpeedX;
+          this.rotY += this.rotSpeedY;
+          this.rotZ += this.rotSpeedZ;
+
+          // Check if it crosses the top of the footer to spawn a settled petal
+          const footer = document.querySelector('footer');
+          let footerTop = height + 100;
+          if (footer) {
+            const rect = footer.getBoundingClientRect();
+            footerTop = rect.top;
+          }
+
+          if (this.y > footerTop && !this.landed) {
+            this.landed = true;
+            spawnSettledPetal(this.x);
+          }
+
+          // Recycle if out of bounds
+          if (this.y > height + 50 || this.x < -50 || this.x > width + 50) {
+            this.reset(false);
+          }
+
+          // Apply 3D transforms using CSS transform for GPU acceleration
+          this.el.style.transform = `translate3d(${this.x}px, ${this.y}px, ${this.z}px) rotateX(${this.rotX}deg) rotateY(${this.rotY}deg) rotateZ(${this.rotZ}deg)`;
+        }
+      }
+
+      // Populate pool
+      for (let i = 0; i < maxPetals; i++) {
+        petalPool.push(new Petal());
+      }
+
+      // Animation Loop
+      function tick() {
+        for (let i = 0; i < petalPool.length; i++) {
+          petalPool[i].update();
+        }
+        requestAnimationFrame(tick);
+      }
+
+      // Start animation loop
+      requestAnimationFrame(tick);
     })();
 
     /* ============ NAV SCROLL ============ */
@@ -2339,6 +2587,38 @@
         });
       }
     })();
+
+    /* ============ SUBMIT INQUIRY ============ */
+    async function submitHomeInquiry(event) {
+      event.preventDefault();
+      const form = document.getElementById('homeInquiryForm');
+      const successMsg = document.getElementById('inquirySuccessMsg');
+      
+      const payload = {
+        name: document.getElementById('inq_name').value,
+        phone: document.getElementById('inq_phone').value,
+        email: document.getElementById('inq_email').value,
+        message: `[Category: ${document.getElementById('inq_pref').value}] ${document.getElementById('inq_message').value}`
+      };
+
+      try {
+        const response = await fetch('/api/inquire', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          form.style.display = 'none';
+          successMsg.style.display = 'block';
+        } else {
+          alert('Something went wrong. Please try again.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Failed to send request. Please check your internet connection.');
+      }
+    }
 
   </script>
 </body>

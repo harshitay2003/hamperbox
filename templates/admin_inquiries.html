@@ -1,0 +1,251 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Manage Inquiries{% endblock %}
+{% block page_title %}Customer Inquiries{% endblock %}
+
+{% block styles %}
+<style>
+  .inquiry-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    position: relative;
+    max-width: 360px;
+    flex: 1;
+    min-width: 250px;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: white;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    transition: all 0.3s;
+  }
+
+  .search-box input:focus {
+    outline: none;
+    border-color: var(--wine);
+    box-shadow: 0 0 0 3px rgba(122, 32, 72, 0.05);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  .table-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+
+  .inquiries-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .inquiries-table th, .inquiries-table td {
+    padding: 18px 20px;
+    font-size: 14.5px;
+    border-bottom: 1px solid #FAF5F0;
+    vertical-align: top;
+  }
+
+  .inquiries-table th {
+    font-weight: 600;
+    color: var(--wine-deep);
+    background: #FAF5F0;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  .inquiries-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .inquiries-table tbody tr:hover {
+    background: rgba(250, 245, 240, 0.4);
+  }
+
+  .client-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .client-name {
+    font-weight: 600;
+    color: var(--wine-deep);
+  }
+
+  .client-meta {
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .message-text {
+    color: #4A3B45;
+    line-height: 1.6;
+    max-width: 400px;
+    white-space: pre-wrap;
+  }
+
+  .ref-product {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--wine);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-status.pending {
+    background: rgba(245, 124, 0, 0.08);
+    color: #F57C00;
+  }
+
+  .badge-status.resolved {
+    background: rgba(46, 125, 50, 0.08);
+    color: #2E7D32;
+  }
+
+  .action-toggle-btn {
+    border: 1px solid var(--glass-border);
+    background: #FFFDFB;
+    color: var(--wine-deep);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .action-toggle-btn:hover {
+    border-color: var(--gold);
+    box-shadow: var(--shadow-sm);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div class="inquiry-actions">
+    <!-- Search -->
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="inquirySearchInput" placeholder="Search client name, phone or message..." oninput="filterInquiries()">
+    </div>
+  </div>
+
+  <!-- INQUIRIES LIST CARD -->
+  <div class="table-card">
+    <div style="overflow-x: auto;">
+      <table class="inquiries-table" id="inquiriesTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Message Details</th>
+            <th>Referenced Item</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for inq in inquiries %}
+          <tr class="inquiry-row" data-search="{{ inq.name.lower() }} {{ inq.phone }} {{ inq.message.lower() }}">
+            <td style="font-size: 13.5px; color: var(--muted); white-space: nowrap;">
+              {{ inq.created_at }}
+            </td>
+            <td>
+              <div class="client-details">
+                <span class="client-name">{{ inq.name }}</span>
+                <span class="client-meta">📞 {{ inq.phone }}</span>
+                <span class="client-meta">✉️ {{ inq.email }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="message-text">{{ inq.message }}</div>
+            </td>
+            <td>
+              {% if inq.product_name %}
+              <div class="ref-product">
+                <span>🎁</span> {{ inq.product_name }}
+              </div>
+              {% else %}
+              <span style="color: var(--muted); font-size: 13px;">General Inquiry</span>
+              {% endif %}
+            </td>
+            <td>
+              <span class="badge-status {{ inq.status.lower() }}">
+                {{ inq.status }}
+              </span>
+            </td>
+            <td>
+              {% if inq.status == 'Pending' %}
+              <a href="/admin/inquiries/toggle/{{ inq.id }}" class="action-toggle-btn">
+                Mark Resolved
+              </a>
+              {% else %}
+              <a href="/admin/inquiries/toggle/{{ inq.id }}" class="action-toggle-btn">
+                Mark Pending
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function filterInquiries() {
+    const query = document.getElementById('inquirySearchInput').value.toLowerCase();
+    const rows = document.querySelectorAll('.inquiry-row');
+    
+    rows.forEach(row => {
+      const text = row.getAttribute('data-search');
+      if (text.includes(query)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+</script>
+{% endblock %}
